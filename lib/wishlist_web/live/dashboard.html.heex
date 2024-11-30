@@ -1,0 +1,65 @@
+<.card>
+  <.card_header>
+    <.card_title>You don't have any wishlists. Would you like to create one?</.card_title>
+    <.card_description>You can add several products to your wishlist</.card_description>
+  </.card_header>
+  <.card_content>
+    <.form :let={f} for={%{}} class="w-2/3 space-y-6" phx-submit="add_to_wishlist" autocomplete="off">
+      <% f = %{f | data: %{name: ""}} %>
+      <.form_item>
+        <.form_label error={not Enum.empty?(f[:name].errors)}>
+          What would you like to call your wishlist?
+        </.form_label>
+        <.input
+          field={f[:name]}
+          type="text"
+          placeholder="The name of your wishlist"
+          phx-debounce="500"
+          required
+          autocomplete="off"
+          data-1p-ignore
+          data-lpignore="true"
+        />
+        <.form_message field={f[:name]} />
+      </.form_item>
+      <.button type="submit">Create</.button>
+    </.form>
+  </.card_content>
+</.card>
+<%= for wishlist <- @wishlists do %>
+  <.card class="max-w-4xl mx auto">
+    <.accordion_trigger open={wishlist.products != []} class="flex flex-row-reverse p-2">
+      <.card_header class="w-full pl-2">
+        <div class="flex items-center justify-between">
+          <.card_title><%= wishlist.name %></.card_title>
+          <.button phx-click={open_search_modal()}>
+            Add item
+          </.button>
+        </div>
+      </.card_header>
+    </.accordion_trigger>
+    <.accordion_content>
+      <.card_content>
+        <div class="space-y-8">
+          <%= for product <- wishlist.products do %>
+            <div class="flex items-center">
+              <span class="relative flex shrink-0 overflow-hidden rounded-full h-9 w-9">
+                <img
+                  class="aspect-square h-full w-full"
+                  alt={product.name}
+                  src="https://via.placeholder.com/80"
+                />
+              </span>
+              <div class="ml-4 space-y-1">
+                <p class="text-sm font-medium leading-none"><%= product.name %></p>
+                <p class="text-sm text-muted-foreground"><%= product.category %></p>
+              </div>
+              <div class="ml-auto font-medium">€<%= product.price %></div>
+            </div>
+          <% end %>
+        </div>
+      </.card_content>
+    </.accordion_content>
+  </.card>
+  <.search_modal search_entries={@search_entries} placeholder="Search for any product" />
+<% end %>

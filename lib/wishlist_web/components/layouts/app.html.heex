@@ -1,0 +1,131 @@
+<div>
+  <aside class="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
+    <nav class="flex flex-col items-center gap-4 px-2 sm:py-5">
+      <.link
+        href="#"
+        class="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
+      >
+        <Lucideicons.package class="h-4 w-4 transition-all group-hover:scale-110" />
+        <span class="sr-only">Acme Inc</span>
+      </.link>
+      <.tooltip>
+        <.link navigate={~p"/"} class={nav_link_class(@current_page, :home)}>
+          <Lucideicons.home class="h-5 w-5" />
+          <span class="sr-only">Home</span>
+        </.link>
+        <.tooltip_content side="right">Home</.tooltip_content>
+      </.tooltip>
+      <.tooltip>
+        <.link navigate={~p"/dashboard"} class={nav_link_class(@current_page, :dashboard)}>
+          <Lucideicons.landmark class="h-5 w-5" />
+          <span class="sr-only">Dashboard</span>
+        </.link>
+        <.tooltip_content side="right">Dashboard</.tooltip_content>
+      </.tooltip>
+    </nav>
+    <nav class="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
+      <.tooltip>
+        <.link
+          href="#"
+          class="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+        >
+          <Lucideicons.settings class="h-5 w-5" />
+          <span class="sr-only">Settings</span>
+        </.link>
+        <.tooltip_content side="right">Settings</.tooltip_content>
+      </.tooltip>
+    </nav>
+  </aside>
+  <div class="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
+    <header class="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
+      <.sheet>
+        <.sheet_trigger target="sheet">
+          <.button size="icon" variant="outline" class="sm:hidden">
+            <Lucideicons.panel_left class="h-5 w-5" />
+            <span class="sr-only">Toggle Menu</span>
+          </.button>
+        </.sheet_trigger>
+        <.sheet_content id="sheet" side="left" class="sm:max-w-xs">
+          <nav class="grid gap-6 text-lg font-medium">
+            <.link
+              href="#"
+              class="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
+            >
+              <Lucideicons.package class="h-5 w-5 transition-all group-hover:scale-110" />
+              <span class="sr-only">Acme Inc</span>
+            </.link>
+            <.link
+              navigate={~p"/"}
+              class={nav_link_class(@current_page, :home)}
+              class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+            >
+              <Lucideicons.shopping_cart class="h-5 w-5" /> Home
+            </.link>
+            <.link
+              navigate={~p"/dashboard"}
+              class={nav_link_class(@current_page, :dashboard)}
+              class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+            >
+              <Lucideicons.landmark class="h-5 w-5" /> Dashboard
+            </.link>
+            <.link
+              href="#"
+              class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+            >
+              <Lucideicons.settings class="h-5 w-5" /> Settings
+            </.link>
+          </nav>
+        </.sheet_content>
+      </.sheet>
+      <.breadcrumb class="hidden md:flex">
+        <.breadcrumb_list>
+          <%= for {breadcrumb, index} <- Enum.with_index(@breadcrumbs) do %>
+            <.breadcrumb_item>
+              <.breadcrumb_link>
+                <%= if breadcrumb.link do %>
+                  <.link navigate={breadcrumb.link}><%= breadcrumb.name %></.link>
+                <% else %>
+                  <%= breadcrumb.name %>
+                <% end %>
+              </.breadcrumb_link>
+            </.breadcrumb_item>
+            <%= if index < length(@breadcrumbs) - 1 do %>
+              <.breadcrumb_separator />
+            <% end %>
+          <% end %>
+        </.breadcrumb_list>
+      </.breadcrumb>
+      <div class="relative ml-auto flex-1 md:grow-0">
+        <Lucideicons.search class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+        <.input
+          type="text"
+          placeholder="Search..."
+          class="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
+        />
+      </div>
+      <.dropdown_menu>
+        <.dropdown_menu_trigger>
+          <.button variant="outline" size="icon" class="overflow-hidden rounded-full">
+            <.avatar>
+              <.avatar_image src="https://github.com/shadcn.png" />
+              <.avatar_fallback class="bg-primary text-white">CN</.avatar_fallback>
+            </.avatar>
+          </.button>
+        </.dropdown_menu_trigger>
+        <.dropdown_menu_content align="end">
+          <.menu>
+            <.menu_label>My Account</.menu_label>
+            <.menu_separator />
+            <.menu_item>Settings</.menu_item>
+            <.menu_item>Support</.menu_item>
+            <.menu_separator />
+            <.menu_item>Logout</.menu_item>
+          </.menu>
+        </.dropdown_menu_content>
+      </.dropdown_menu>
+    </header>
+    <main class="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
+      <%= @inner_content %>
+    </main>
+  </div>
+</div>
