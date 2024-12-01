@@ -1,20 +1,15 @@
 # priv/repo/seeds.exs
+alias Wishlist.Store
+alias Wishlist.Product
 
-alias Wishlist.Repo
-alias Wishlist.DbSchema.{Store, Product, ProductsStore}
-
-# Ensure UUID generation is available
+# Generate a UUID for the store
 store_id = Ecto.UUID.generate()
 
-# Insert a single store
-store = %Store{
-  id: store_id,
-  name: "SuperMart"
-}
+# Insert the store using AyeSQL
+store_name = "SuperMart"
+Store.Queries.insert_store(id: store_id, name: store_name)
 
-Repo.insert!(store)
-
-# Define realistic product categories
+# Define product categories
 categories = [
   "Electronics",
   "Home Appliances",
@@ -31,32 +26,25 @@ categories = [
 # Generate and insert 100 products
 for _ <- 1..100 do
   product_id = Ecto.UUID.generate()
-
-  # Randomly pick a category
   category = Enum.random(categories)
-
-  # Generate a realistic product name
   product_name = Faker.Commerce.product_name()
+  price = Float.round(:rand.uniform() * 1000, 2)
+  description = Faker.Lorem.sentence()
 
-  # Insert product
-  product = %Product{
+  # Insert product using AyeSQL
+  Product.Queries.insert_product(
     id: product_id,
     name: product_name,
-    # Random price between 0.01 and 1000
-    price: Decimal.new(:rand.uniform(1000)) |> Decimal.round(2),
-    description: Faker.Lorem.sentence(),
+    price: price,
+    description: description,
     category: category
-  }
-
-  Repo.insert!(product)
+  )
 
   # Associate product with store
-  product_store = %ProductsStore{
+  Store.Queries.add_product_to_store(
     product_id: product_id,
     store_id: store_id
-  }
-
-  Repo.insert!(product_store)
+  )
 end
 
 IO.puts("Inserted 1 store and 100 products.")

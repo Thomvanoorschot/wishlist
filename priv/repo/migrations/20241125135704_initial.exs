@@ -8,7 +8,7 @@ defmodule Wishlist.Repo.Migrations.Initial do
       add :id, :binary_id, primary_key: true
       add :name, :string, null: false
 
-      timestamps()
+      timestamps(type: :timestamptz)
     end
 
     create table(:products, primary_key: false) do
@@ -18,7 +18,7 @@ defmodule Wishlist.Repo.Migrations.Initial do
       add :price, :decimal, null: false, precision: 10, scale: 2
       add :description, :text
 
-      timestamps()
+      timestamps(type: :timestamptz)
     end
 
     create index(:products, ["name gin_trgm_ops"], using: :gin)
@@ -29,7 +29,7 @@ defmodule Wishlist.Repo.Migrations.Initial do
 
       add :store_id, references(:stores, type: :binary_id, on_delete: :delete_all), null: false
 
-      timestamps()
+      timestamps(type: :timestamptz)
     end
 
     create unique_index(:products_stores, [:product_id, :store_id])
@@ -39,7 +39,7 @@ defmodule Wishlist.Repo.Migrations.Initial do
       add :user_id, :binary_id, null: false
       add :name, :string, null: false
 
-      timestamps()
+      timestamps(type: :timestamptz)
     end
 
     create table(:wishlist_products, primary_key: false) do
@@ -51,7 +51,7 @@ defmodule Wishlist.Repo.Migrations.Initial do
           references(:products, type: :binary_id, on_delete: :delete_all),
           null: false
 
-      timestamps()
+      timestamps(type: :timestamptz)
     end
 
     create unique_index(:wishlist_products, [:wishlist_id, :product_id])

@@ -47,6 +47,7 @@ defmodule WishlistWeb.SearchModal do
                 </svg>
 
                 <input
+                  phx-update="ignore"
                   id="search-input"
                   name="search[query]"
                   class="flex-auto rounded-lg appearance-none bg-transparent pl-10 text-zinc-900 outline-none focus:outline-none border-slate-200 focus:border-slate-200 focus:ring-0 focus:shadow-none placeholder:text-zinc-500 focus:w-full focus:flex-none sm:text-sm [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden [&::-webkit-search-results-button]:hidden [&::-webkit-search-results-decoration]:hidden pr-4"

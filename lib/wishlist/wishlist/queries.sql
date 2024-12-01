@@ -1,4 +1,4 @@
--- file: wishlist_queries.sql
+-- file: queries.sql
 -- name: upsert_wishlist
 INSERT INTO
   wishlists (id, user_id, name, inserted_at, updated_at)
@@ -19,6 +19,7 @@ SELECT
   W.id :: text,
   W.user_id,
   W.name,
+  W.inserted_at,
   P.id AS product_id,
   P.name AS product_name,
   P.category AS product_category,

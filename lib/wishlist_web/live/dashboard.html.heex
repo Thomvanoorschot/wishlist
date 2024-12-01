@@ -4,7 +4,13 @@
     <.card_description>You can add several products to your wishlist</.card_description>
   </.card_header>
   <.card_content>
-    <.form :let={f} for={%{}} class="w-2/3 space-y-6" phx-submit="add_to_wishlist" autocomplete="off">
+    <.form
+      :let={f}
+      for={%{}}
+      class="w-2/3 space-y-6"
+      phx-submit="add_to_wishlist"
+      autocomplete="off"
+    >
       <% f = %{f | data: %{name: ""}} %>
       <.form_item>
         <.form_label error={not Enum.empty?(f[:name].errors)}>
@@ -26,13 +32,19 @@
     </.form>
   </.card_content>
 </.card>
-<%= for wishlist <- @wishlists do %>
+<%= for {wishlist, index} <- Enum.with_index(@wishlists)  do %>
   <.card class="max-w-4xl mx auto">
-    <.accordion_trigger open={wishlist.products != []} class="flex flex-row-reverse p-2">
+    <.accordion_trigger
+      open={wishlist.products != [] && index == 0}
+      class="flex flex-row-reverse p-2"
+    >
       <.card_header class="w-full pl-2">
         <div class="flex items-center justify-between">
           <.card_title><%= wishlist.name %></.card_title>
-          <.button phx-click={open_search_modal()}>
+          <.button phx-click={
+            JS.push("add_wishlist_clicked", value: %{wishlist_id: wishlist.id})
+            |> open_search_modal()
+          }>
             Add item
           </.button>
         </div>
@@ -61,5 +73,5 @@
       </.card_content>
     </.accordion_content>
   </.card>
-  <.search_modal search_entries={@search_entries} placeholder="Search for any product" />
 <% end %>
+<.search_modal search_entries={@search_entries} placeholder="Search for any product" />
