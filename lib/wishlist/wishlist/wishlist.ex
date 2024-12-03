@@ -14,4 +14,8 @@ defmodule Wishlist.Wishlist do
   def add_to_wishlist(wishlist_id, product_id) do
     Queries.insert_to_wishlist(wishlist_id: wishlist_id, product_id: product_id)
   end
+
+  def delete_wishlist(wishlist_id) do
+    Queries.delete_wishlist(wishlist_id: wishlist_id)
+  end
 end

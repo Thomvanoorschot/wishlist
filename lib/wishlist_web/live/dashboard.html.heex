@@ -1,6 +1,10 @@
 <.card>
   <.card_header>
-    <.card_title>You don't have any wishlists. Would you like to create one?</.card_title>
+    <%= if @wishlists == [] do %>
+      <.card_title>You don't have any wishlists. Would you like to create one?</.card_title>
+    <% else %>
+      <.card_title>Would you like to create another wishlist?</.card_title>
+    <% end %>
     <.card_description>You can add several products to your wishlist</.card_description>
   </.card_header>
   <.card_content>
@@ -61,15 +65,16 @@
               </.dropdown_menu_trigger>
               <.dropdown_menu_content align="end">
                 <.menu class="w-56">
-                  <.menu_item>
+                  <.menu_item
+                    phx-click={show_modal("edit-dialog-#{wishlist.id}")}
+                    onclick="event.preventDefault(); "
+                  >
                     <.icon name="hero-pencil-square" class="mr-2 h-4 w-4" />
                     <span>Edit</span>
                     <.menu_shortcut>⌘P</.menu_shortcut>
                   </.menu_item>
                   <.menu_item
-                    phx-click={
-                      JS.exec("phx-show-alert-dialog", to: "#delete-dialog-#{wishlist.id}")
-                    }
+                    phx-click={show_modal("delete-dialog-#{wishlist.id}")}
                     onclick="event.preventDefault(); "
                   >
                     <.icon name="hero-trash" class="mr-2 h-4 w-4" />
@@ -106,30 +111,65 @@
       </.card_content>
     </.accordion_content>
   </.card>
-  <.alert_dialog :let={builder} id={"delete-dialog-#{wishlist.id}"}>
-    <.alert_dialog_content
-      builder={builder}
-      phx-window-keydown={hide_alert_dialog(builder)}
-      phx-click-away={hide_alert_dialog(builder)}
-      phx-key="escape"
-    >
-      <.alert_dialog_header>
-        <.alert_dialog_title>Are you absolutely sure?</.alert_dialog_title>
-        <.alert_dialog_description>
-          this action cannot be undone. this will permanently delete your wishlist.
-        </.alert_dialog_description>
-      </.alert_dialog_header>
-      <.alert_dialog_footer>
-        <.alert_dialog_cancel builder={builder}>Cancel</.alert_dialog_cancel>
-        <.alert_dialog_action phx-click={
-          hide_alert_dialog(builder)
+  <.dialog
+    id={"delete-dialog-#{wishlist.id}"}
+    on_cancel={hide_modal("delete-dialog-#{wishlist.id}")}
+  >
+    <.dialog_header>
+      <.dialog_title>Are you absolutely sure?</.dialog_title>
+      <.dialog_description>
+        this action cannot be undone. this will permanently delete your wishlist.
+      </.dialog_description>
+    </.dialog_header>
+    <.dialog_footer class="flex justify-between">
+      <.button phx-click={hide_modal("delete-dialog-#{wishlist.id}")}>Cancel</.button>
+      <.button
+        variant="destructive"
+        phx-click={
+          hide_modal("delete-dialog-#{wishlist.id}")
           |> JS.push("delete_wishlist", value: %{wishlist_id: wishlist.id})
-        }>
-          Continue
-        </.alert_dialog_action>
-      </.alert_dialog_footer>
-    </.alert_dialog_content>
-  </.alert_dialog>
+        }
+      >
+        Continue
+      </.button>
+    </.dialog_footer>
+  </.dialog>
+  <.dialog id={"edit-dialog-#{wishlist.id}"} on_cancel={hide_modal("edit-dialog-#{wishlist.id}")}>
+    <.dialog_header>
+      <.dialog_title>Edit wishlist</.dialog_title>
+      <.dialog_description>
+        Make changes to your wishlist here and click save when you're done
+      </.dialog_description>
+    </.dialog_header>
+
+    <.form
+      :let={f}
+      for={%{"name" => wishlist.name}}
+      as={:"wishlist_#{wishlist.id}"}
+      phx-submit="edit_wishlist"
+      id={"edit-wishlist-form-#{wishlist.id}"}
+      class="flex flex-col gap-4"
+    >
+      <div class="grid grid-cols-4 items-center gap-4">
+        <.label for={f[:name].id} class="text-right">
+          Name
+        </.label>
+        <.input
+          autocomplete="off"
+          data-1p-ignore
+          data-lpignore="true"
+          field={f[:name]}
+          class="col-span-3"
+        />
+      </div>
+
+      <div class="flex justify-end">
+        <.button type="submit">
+          Save Changes
+        </.button>
+      </div>
+    </.form>
+  </.dialog>
 <% end %>
 <.search_modal search_entries={@search_entries} placeholder="Search for any product">
   <:entry_slot :let={entry}>

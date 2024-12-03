@@ -12,7 +12,6 @@ defmodule WishlistWeb.Dashboard do
   import SaladUI.Form
   import SaladUI.DropdownMenu
   import SaladUI.Menu
-  import SaladUI.AlertDialog
   import SaladUI.Dialog
 
   def mount(_params, _session, socket) do
@@ -30,9 +29,7 @@ defmodule WishlistWeb.Dashboard do
     {:ok, socket}
   end
 
-  @spec handle_event(<<_::64, _::_*8>>, map(), any()) :: {:noreply, any()}
   def handle_event("add_wishlist_clicked", %{"wishlist_id" => wishlist_id}, socket) do
-    IO.inspect(wishlist_id)
     socket = assign(socket, :selected_wishlist_id, wishlist_id)
     {:noreply, socket}
   end
@@ -54,13 +51,10 @@ defmodule WishlistWeb.Dashboard do
 
     Wishlist.add_to_wishlist(socket.assigns.selected_wishlist_id, product_id)
 
-    IO.inspect(product.price)
-
     updated_wishlists =
       Enum.map(socket.assigns.wishlists, fn wishlist ->
         if wishlist.id == socket.assigns.selected_wishlist_id do
           updated_products = [product | wishlist.products]
-          %{wishlist | products: updated_products}
 
           %{
             wishlist
@@ -100,8 +94,35 @@ defmodule WishlistWeb.Dashboard do
     updated_wishlist =
       Enum.filter(socket.assigns.wishlists, fn item -> item.id != wishlist_id end)
 
+    Wishlist.delete_wishlist(wishlist_id)
     socket = assign(socket, wishlists: updated_wishlist)
 
+    {:noreply, socket}
+  end
+
+  def handle_event("edit_wishlist", params, socket) do
+    # Find the key that starts with "wishlist_"
+    {"wishlist_" <> wishlist_id, wishlist_params} =
+      Enum.find(params, fn {key, _val} -> String.starts_with?(key, "wishlist_") end)
+
+    name = wishlist_params["name"]
+
+    updated_wishlists =
+      Enum.map(socket.assigns.wishlists, fn wishlist ->
+        if wishlist.id == wishlist_id do
+          %{wishlist | name: name}
+        else
+          wishlist
+        end
+      end)
+
+    Wishlist.upsert_wishlist(%{
+      id: wishlist_id,
+      user_id: "b1c0d3fa-5489-4d13-ab2c-7cc2241fe820",
+      name: name
+    })
+
+    socket = assign(socket, wishlists: updated_wishlists)
     {:noreply, socket}
   end
 end

@@ -43,3 +43,9 @@ VALUES
     now(),
     now()
   );
+
+-- name: delete_wishlist
+DELETE FROM
+  wishlists
+WHERE
+  id = :wishlist_id :: text :: uuid;
