@@ -5,6 +5,7 @@ defmodule WishlistWeb.SearchModal do
 
   attr :placeholder, :string, default: "Find something..."
   attr :search_entries, :any, default: []
+  slot :entry_slot
 
   @spec search_modal(map()) :: Phoenix.LiveView.Rendered.t()
   def search_modal(assigns) do
@@ -76,14 +77,18 @@ defmodule WishlistWeb.SearchModal do
                 role="listbox"
               >
                 <%= for entry <- @search_entries do %>
-                  <.link
-                    phx-click="click_search_entry"
-                    phx-value-id={entry.id}
-                    id={"#{entry.id}"}
-                    class="block p-4 hover:bg-slate-100 focus:outline-none focus:bg-slate-100 focus:text-sky-800"
-                  >
-                    <%= entry.name %>
-                  </.link>
+                  <%= if @entry_slot != [] do %>
+                    <%= render_slot(@entry_slot, entry) %>
+                  <% else %>
+                    <.link
+                      phx-click="click_search_entry"
+                      phx-value-id={entry.id}
+                      id={"#{entry.id}"}
+                      class="block p-4 hover:bg-slate-100 focus:outline-none focus:bg-slate-100 focus:text-sky-800"
+                    >
+                      <%= entry.name %>
+                    </.link>
+                  <% end %>
                 <% end %>
               </ul>
             </form>

@@ -20,6 +20,7 @@ SELECT
   W.user_id,
   W.name,
   W.inserted_at,
+  SUM(P.price) OVER (PARTITION BY W.id) AS total_cost,
   P.id AS product_id,
   P.name AS product_name,
   P.category AS product_category,
@@ -29,7 +30,8 @@ FROM
   LEFT JOIN wishlist_products WP ON WP.wishlist_id = W.id
   LEFT JOIN products P ON P.id = WP.product_id
 ORDER BY
-  W.inserted_at DESC;
+  W.inserted_at DESC,
+  WP.inserted_at DESC;
 
 -- name: insert_to_wishlist
 INSERT INTO

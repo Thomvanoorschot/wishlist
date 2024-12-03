@@ -10,6 +10,10 @@ defmodule WishlistWeb.Dashboard do
   import SaladUI.Accordion
   import SaladUI.Input
   import SaladUI.Form
+  import SaladUI.DropdownMenu
+  import SaladUI.Menu
+  import SaladUI.AlertDialog
+  import SaladUI.Dialog
 
   def mount(_params, _session, socket) do
     wishlists = Wishlist.get_with_products()
@@ -26,6 +30,7 @@ defmodule WishlistWeb.Dashboard do
     {:ok, socket}
   end
 
+  @spec handle_event(<<_::64, _::_*8>>, map(), any()) :: {:noreply, any()}
   def handle_event("add_wishlist_clicked", %{"wishlist_id" => wishlist_id}, socket) do
     IO.inspect(wishlist_id)
     socket = assign(socket, :selected_wishlist_id, wishlist_id)
@@ -49,11 +54,22 @@ defmodule WishlistWeb.Dashboard do
 
     Wishlist.add_to_wishlist(socket.assigns.selected_wishlist_id, product_id)
 
+    IO.inspect(product.price)
+
     updated_wishlists =
       Enum.map(socket.assigns.wishlists, fn wishlist ->
         if wishlist.id == socket.assigns.selected_wishlist_id do
-          updated_products = wishlist.products ++ [product]
+          updated_products = [product | wishlist.products]
           %{wishlist | products: updated_products}
+
+          %{
+            wishlist
+            | products: updated_products,
+              total_cost:
+                (wishlist.total_cost ||
+                   Decimal.new(0))
+                |> Decimal.add(product.price)
+          }
         else
           wishlist
         end
@@ -65,7 +81,7 @@ defmodule WishlistWeb.Dashboard do
     {:noreply, socket}
   end
 
-  def handle_event("add_to_wishlist", %{"name" => name}, socket) do
+  def handle_event("create_wishlist", %{"name" => name}, socket) do
     new_id = UUID.uuid4()
     updated_wishlists = [%Wishlist.Model{id: new_id, name: name} | socket.assigns.wishlists]
 
@@ -76,6 +92,15 @@ defmodule WishlistWeb.Dashboard do
     })
 
     socket = assign(socket, wishlists: updated_wishlists)
+
+    {:noreply, socket}
+  end
+
+  def handle_event("delete_wishlist", %{"wishlist_id" => wishlist_id}, socket) do
+    updated_wishlist =
+      Enum.filter(socket.assigns.wishlists, fn item -> item.id != wishlist_id end)
+
+    socket = assign(socket, wishlists: updated_wishlist)
 
     {:noreply, socket}
   end

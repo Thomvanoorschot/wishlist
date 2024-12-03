@@ -6,6 +6,7 @@ defmodule Wishlist.Wishlist.WishlistDb.WithProducts do
     :id,
     :user_id,
     :name,
+    :total_cost,
     :inserted_at,
     :product_id,
     :product_name,
@@ -31,11 +32,14 @@ defmodule Wishlist.Wishlist.WishlistDb.WithProducts do
           }
         end)
 
+      # |> Enum.sort_by(& &1.inserted_at, {:desc, DateTime})
+
       %Wishlist.Model{
         id: first_item.id,
         user_id: first_item.user_id,
         name: first_item.name,
         inserted_at: first_item.inserted_at,
+        total_cost: first_item.total_cost,
         products: products
       }
     end)

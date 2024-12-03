@@ -8,7 +8,7 @@
       :let={f}
       for={%{}}
       class="w-2/3 space-y-6"
-      phx-submit="add_to_wishlist"
+      phx-submit="create_wishlist"
       autocomplete="off"
     >
       <% f = %{f | data: %{name: ""}} %>
@@ -40,13 +40,46 @@
     >
       <.card_header class="w-full pl-2">
         <div class="flex items-center justify-between">
-          <.card_title><%= wishlist.name %></.card_title>
-          <.button phx-click={
-            JS.push("add_wishlist_clicked", value: %{wishlist_id: wishlist.id})
-            |> open_search_modal()
-          }>
-            Add item
-          </.button>
+          <div>
+            <.card_title><%= wishlist.name %></.card_title>
+            <%= if wishlist.total_cost do %>
+              <.card_description>€<%= wishlist.total_cost %></.card_description>
+            <% end %>
+          </div>
+          <div class="flex gap-2">
+            <.button phx-click={
+              JS.push("add_wishlist_clicked", value: %{wishlist_id: wishlist.id})
+              |> open_search_modal()
+            }>
+              Add item
+            </.button>
+            <.dropdown_menu>
+              <.dropdown_menu_trigger>
+                <.button variant="outline">
+                  <.icon name="hero-ellipsis-vertical" class="h-4 w-4" />
+                </.button>
+              </.dropdown_menu_trigger>
+              <.dropdown_menu_content align="end">
+                <.menu class="w-56">
+                  <.menu_item>
+                    <.icon name="hero-pencil-square" class="mr-2 h-4 w-4" />
+                    <span>Edit</span>
+                    <.menu_shortcut>⌘P</.menu_shortcut>
+                  </.menu_item>
+                  <.menu_item
+                    phx-click={
+                      JS.exec("phx-show-alert-dialog", to: "#delete-dialog-#{wishlist.id}")
+                    }
+                    onclick="event.preventDefault(); "
+                  >
+                    <.icon name="hero-trash" class="mr-2 h-4 w-4" />
+                    <span>Delete</span>
+                    <.menu_shortcut>⌘B</.menu_shortcut>
+                  </.menu_item>
+                </.menu>
+              </.dropdown_menu_content>
+            </.dropdown_menu>
+          </div>
         </div>
       </.card_header>
     </.accordion_trigger>
@@ -73,5 +106,43 @@
       </.card_content>
     </.accordion_content>
   </.card>
+  <.alert_dialog :let={builder} id={"delete-dialog-#{wishlist.id}"}>
+    <.alert_dialog_content
+      builder={builder}
+      phx-window-keydown={hide_alert_dialog(builder)}
+      phx-click-away={hide_alert_dialog(builder)}
+      phx-key="escape"
+    >
+      <.alert_dialog_header>
+        <.alert_dialog_title>Are you absolutely sure?</.alert_dialog_title>
+        <.alert_dialog_description>
+          this action cannot be undone. this will permanently delete your wishlist.
+        </.alert_dialog_description>
+      </.alert_dialog_header>
+      <.alert_dialog_footer>
+        <.alert_dialog_cancel builder={builder}>Cancel</.alert_dialog_cancel>
+        <.alert_dialog_action phx-click={
+          hide_alert_dialog(builder)
+          |> JS.push("delete_wishlist", value: %{wishlist_id: wishlist.id})
+        }>
+          Continue
+        </.alert_dialog_action>
+      </.alert_dialog_footer>
+    </.alert_dialog_content>
+  </.alert_dialog>
 <% end %>
-<.search_modal search_entries={@search_entries} placeholder="Search for any product" />
+<.search_modal search_entries={@search_entries} placeholder="Search for any product">
+  <:entry_slot :let={entry}>
+    <.link
+      phx-click="click_search_entry"
+      phx-value-id={entry.id}
+      id={"#{entry.id}"}
+      class="block p-4 hover:bg-slate-100 focus:outline-none focus:bg-slate-100 focus:text-sky-800"
+    >
+      <div class="flex justify-between">
+        <div><%= entry.name %></div>
+        <div>€<%= entry.price %></div>
+      </div>
+    </.link>
+  </:entry_slot>
+</.search_modal>
