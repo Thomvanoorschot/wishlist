@@ -17,11 +17,11 @@ SET
 -- name: get_with_products
 SELECT
   W.id :: text,
-  W.user_id,
+  W.user_id :: text,
   W.name,
   W.inserted_at,
   SUM(P.price) OVER (PARTITION BY W.id) AS total_cost,
-  P.id AS product_id,
+  P.id :: text AS product_id,
   P.name AS product_name,
   P.category AS product_category,
   P.price AS product_price

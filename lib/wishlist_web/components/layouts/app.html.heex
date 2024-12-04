@@ -5,19 +5,19 @@
         href="#"
         class="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
       >
-        <Lucideicons.package class="h-4 w-4 transition-all group-hover:scale-110" />
+        <.icon name="hero-arrow-path" class="h-4 w-4 transition-all group-hover:scale-110" />
         <span class="sr-only">Acme Inc</span>
       </.link>
       <.tooltip>
         <.link navigate={~p"/"} class={nav_link_class(@current_page, :home)}>
-          <Lucideicons.home class="h-5 w-5" />
+          <.icon name="hero-arrow-path" class="h-5 w-5" />
           <span class="sr-only">Home</span>
         </.link>
         <.tooltip_content side="right">Home</.tooltip_content>
       </.tooltip>
       <.tooltip>
         <.link navigate={~p"/dashboard"} class={nav_link_class(@current_page, :dashboard)}>
-          <Lucideicons.landmark class="h-5 w-5" />
+          <.icon name="hero-arrow-path" class="h-5 w-5" />
           <span class="sr-only">Dashboard</span>
         </.link>
         <.tooltip_content side="right">Dashboard</.tooltip_content>
@@ -29,7 +29,7 @@
           href="#"
           class="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
         >
-          <Lucideicons.settings class="h-5 w-5" />
+          <.icon name="hero-arrow-path" class="h-5 w-5" />
           <span class="sr-only">Settings</span>
         </.link>
         <.tooltip_content side="right">Settings</.tooltip_content>
@@ -41,7 +41,7 @@
       <.sheet>
         <.sheet_trigger target="sheet">
           <.button size="icon" variant="outline" class="sm:hidden">
-            <Lucideicons.panel_left class="h-5 w-5" />
+            <.icon name="hero-arrow-path" class="h-5 w-5" />
             <span class="sr-only">Toggle Menu</span>
           </.button>
         </.sheet_trigger>
@@ -51,7 +51,7 @@
               href="#"
               class="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
             >
-              <Lucideicons.package class="h-5 w-5 transition-all group-hover:scale-110" />
+              <.icon name="hero-arrow-path" class="h-5 w-5 transition-all group-hover:scale-110" />
               <span class="sr-only">Acme Inc</span>
             </.link>
             <.link
@@ -59,20 +59,20 @@
               class={nav_link_class(@current_page, :home)}
               class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
             >
-              <Lucideicons.shopping_cart class="h-5 w-5" /> Home
+              <.icon name="hero-arrow-path" class="h-5 w-5" /> Home
             </.link>
             <.link
               navigate={~p"/dashboard"}
               class={nav_link_class(@current_page, :dashboard)}
               class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
             >
-              <Lucideicons.landmark class="h-5 w-5" /> Dashboard
+              <.icon name="hero-arrow-path" class="h-5 w-5" /> Dashboard
             </.link>
             <.link
               href="#"
               class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
             >
-              <Lucideicons.settings class="h-5 w-5" /> Settings
+              <.icon name="hero-arrow-path" class="h-5 w-5" /> Settings
             </.link>
           </nav>
         </.sheet_content>
@@ -96,7 +96,10 @@
         </.breadcrumb_list>
       </.breadcrumb>
       <div class="relative ml-auto flex-1 md:grow-0">
-        <Lucideicons.search class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+        <.icon
+          name="hero-magnifying-glass"
+          class="absolute left-2.5 top-3 h-4 w-4 text-muted-foreground"
+        />
         <.input
           type="text"
           placeholder="Search..."

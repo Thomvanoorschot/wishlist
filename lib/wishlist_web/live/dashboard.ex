@@ -19,6 +19,7 @@ defmodule WishlistWeb.Dashboard do
 
     socket =
       socket
+      |> assign(:delete_products_enabled, false)
       |> assign(:search_entries, [])
       |> assign(:wishlists, wishlists)
       |> assign(:current_page, :dashboard)
@@ -29,6 +30,7 @@ defmodule WishlistWeb.Dashboard do
     {:ok, socket}
   end
 
+  @spec handle_event(<<_::64, _::_*8>>, any(), any()) :: {:noreply, any()}
   def handle_event("add_wishlist_clicked", %{"wishlist_id" => wishlist_id}, socket) do
     socket = assign(socket, :selected_wishlist_id, wishlist_id)
     {:noreply, socket}
@@ -46,7 +48,7 @@ defmodule WishlistWeb.Dashboard do
     {:noreply, socket}
   end
 
-  def handle_event("click_search_entry", %{"id" => product_id}, socket) do
+  def handle_event("add_product_to_list", %{"product_id" => product_id}, socket) do
     product = Enum.find(socket.assigns.search_entries, fn item -> item.id == product_id end)
 
     Wishlist.add_to_wishlist(socket.assigns.selected_wishlist_id, product_id)
@@ -72,6 +74,29 @@ defmodule WishlistWeb.Dashboard do
     products = Product.search(socket.assigns.search_query)
     socket = assign(socket, wishlists: updated_wishlists, search_entries: products)
 
+    {:noreply, socket}
+  end
+
+  def handle_event(
+        "remove_product_from_list",
+        %{"wishlist_id" => wishlist_id, "product_id" => product_id},
+        socket
+      ) do
+    updated_wishlists =
+      Enum.map(socket.assigns.wishlists, fn wishlist ->
+        if wishlist.id == wishlist_id do
+          updated_products = Enum.filter(wishlist.products, fn item -> item.id != product_id end)
+          # TODO Reduce the total price of the cost also do this in upside method
+          %{
+            wishlist
+            | products: updated_products
+          }
+        else
+          wishlist
+        end
+      end)
+
+    socket = assign(socket, wishlists: updated_wishlists)
     {:noreply, socket}
   end
 
@@ -123,6 +148,12 @@ defmodule WishlistWeb.Dashboard do
     })
 
     socket = assign(socket, wishlists: updated_wishlists)
+    {:noreply, socket}
+  end
+
+  def handle_event("toggle_delete_products", %{}, socket) do
+    socket = assign(socket, delete_products_enabled: !socket.assigns.delete_products_enabled)
+
     {:noreply, socket}
   end
 end

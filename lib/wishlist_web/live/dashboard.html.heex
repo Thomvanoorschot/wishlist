@@ -78,7 +78,15 @@
                     onclick="event.preventDefault(); "
                   >
                     <.icon name="hero-trash" class="mr-2 h-4 w-4" />
-                    <span>Delete</span>
+                    <span>Delete wishlist</span>
+                    <.menu_shortcut>⌘B</.menu_shortcut>
+                  </.menu_item>
+                  <.menu_item
+                    phx-click="toggle_delete_products"
+                    onclick="event.preventDefault(); "
+                  >
+                    <.icon name="hero-minus-circle" class="mr-2 h-4 w-4" />
+                    <span>Delete products</span>
                     <.menu_shortcut>⌘B</.menu_shortcut>
                   </.menu_item>
                 </.menu>
@@ -102,9 +110,18 @@
               </span>
               <div class="ml-4 space-y-1">
                 <p class="text-sm font-medium leading-none"><%= product.name %></p>
-                <p class="text-sm text-muted-foreground"><%= product.category %></p>
+                <p class="text-sm text-muted-foreground">€<%= product.price %></p>
               </div>
-              <div class="ml-auto font-medium">€<%= product.price %></div>
+              <%= if @delete_products_enabled do %>
+                <div
+                  phx-click="remove_product_from_list"
+                  phx-value-wishlist_id={wishlist.id}
+                  phx-value-product_id={product.id}
+                  class="ml-auto"
+                >
+                  <.icon name="hero-minus-circle-solid" class="7 bg-red-700" />
+                </div>
+              <% end %>
             </div>
           <% end %>
         </div>
@@ -174,8 +191,8 @@
 <.search_modal search_entries={@search_entries} placeholder="Search for any product">
   <:entry_slot :let={entry}>
     <.link
-      phx-click="click_search_entry"
-      phx-value-id={entry.id}
+      phx-click="add_product_to_list"
+      phx-value-product_id={entry.id}
       id={"#{entry.id}"}
       class="block p-4 hover:bg-slate-100 focus:outline-none focus:bg-slate-100 focus:text-sky-800"
     >
