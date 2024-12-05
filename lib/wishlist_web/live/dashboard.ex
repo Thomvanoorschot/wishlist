@@ -30,7 +30,6 @@ defmodule WishlistWeb.Dashboard do
     {:ok, socket}
   end
 
-  @spec handle_event(<<_::64, _::_*8>>, any(), any()) :: {:noreply, any()}
   def handle_event("add_wishlist_clicked", %{"wishlist_id" => wishlist_id}, socket) do
     socket = assign(socket, :selected_wishlist_id, wishlist_id)
     {:noreply, socket}
@@ -62,9 +61,9 @@ defmodule WishlistWeb.Dashboard do
             wishlist
             | products: updated_products,
               total_cost:
-                (wishlist.total_cost ||
-                   Decimal.new(0))
-                |> Decimal.add(product.price)
+                Enum.reduce(updated_products, Decimal.new(0), fn product, acc ->
+                  Decimal.add(acc, product.price)
+                end)
           }
         else
           wishlist
@@ -72,16 +71,24 @@ defmodule WishlistWeb.Dashboard do
       end)
 
     products = Product.search(socket.assigns.search_query)
-    socket = assign(socket, wishlists: updated_wishlists, search_entries: products)
+
+    socket =
+      assign(socket,
+        wishlists: updated_wishlists,
+        search_entries: products,
+        delete_products_enabled: false
+      )
 
     {:noreply, socket}
   end
 
   def handle_event(
-        "remove_product_from_list",
+        "delete_product_from_list",
         %{"wishlist_id" => wishlist_id, "product_id" => product_id},
         socket
       ) do
+    Wishlist.delete_product_from_list(wishlist_id, product_id)
+
     updated_wishlists =
       Enum.map(socket.assigns.wishlists, fn wishlist ->
         if wishlist.id == wishlist_id do
@@ -89,7 +96,11 @@ defmodule WishlistWeb.Dashboard do
           # TODO Reduce the total price of the cost also do this in upside method
           %{
             wishlist
-            | products: updated_products
+            | products: updated_products,
+              total_cost:
+                Enum.reduce(updated_products, Decimal.new(0), fn product, acc ->
+                  Decimal.add(acc, product.price)
+                end)
           }
         else
           wishlist
@@ -110,7 +121,7 @@ defmodule WishlistWeb.Dashboard do
       name: name
     })
 
-    socket = assign(socket, wishlists: updated_wishlists)
+    socket = assign(socket, wishlists: updated_wishlists, delete_products_enabled: false)
 
     {:noreply, socket}
   end
@@ -147,7 +158,7 @@ defmodule WishlistWeb.Dashboard do
       name: name
     })
 
-    socket = assign(socket, wishlists: updated_wishlists)
+    socket = assign(socket, wishlists: updated_wishlists, delete_products_enabled: false)
     {:noreply, socket}
   end
 

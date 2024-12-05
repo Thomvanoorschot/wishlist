@@ -18,4 +18,8 @@ defmodule Wishlist.Wishlist do
   def delete_wishlist(wishlist_id) do
     Queries.delete_wishlist(wishlist_id: wishlist_id)
   end
+
+  def delete_product_from_list(wishlist_id, product_id) do
+    Queries.delete_product_from_list(wishlist_id: wishlist_id, product_id: product_id)
+  end
 end

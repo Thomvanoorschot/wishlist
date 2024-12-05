@@ -105,7 +105,7 @@
                 <img
                   class="aspect-square h-full w-full"
                   alt={product.name}
-                  src="https://via.placeholder.com/80"
+                  src="https://placehold.co/80"
                 />
               </span>
               <div class="ml-4 space-y-1">
@@ -114,12 +114,12 @@
               </div>
               <%= if @delete_products_enabled do %>
                 <div
-                  phx-click="remove_product_from_list"
+                  phx-click="delete_product_from_list"
                   phx-value-wishlist_id={wishlist.id}
                   phx-value-product_id={product.id}
                   class="ml-auto"
                 >
-                  <.icon name="hero-minus-circle-solid" class="7 bg-red-700" />
+                  <.icon name="hero-minus-circle-solid" class="7 bg-destructive" />
                 </div>
               <% end %>
             </div>

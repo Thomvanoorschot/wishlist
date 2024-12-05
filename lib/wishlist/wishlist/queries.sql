@@ -49,3 +49,10 @@ DELETE FROM
   wishlists
 WHERE
   id = :wishlist_id :: text :: uuid;
+
+-- name: delete_product_from_list
+DELETE FROM
+  wishlist_products
+WHERE
+  wishlist_id = :wishlist_id :: text :: uuid
+  AND product_id = :product_id :: text :: uuid;
