@@ -1,6 +1,7 @@
-defmodule WishlistWeb.DashboardLive do
+defmodule WishlistWeb.Live.ManageWishlists do
   use WishlistWeb, :live_view
 
+  alias Wishlist.Wishlist.Models.WishlistModel
   alias Wishlist.Product
   alias Wishlist.Wishlist
 
@@ -22,9 +23,9 @@ defmodule WishlistWeb.DashboardLive do
       |> assign(:delete_products_enabled, false)
       |> assign(:search_entries, [])
       |> assign(:wishlists, wishlists)
-      |> assign(:current_page, :dashboard)
+      |> assign(:current_page, :manage_wishlists)
       |> assign(:breadcrumbs, [
-        %{name: "Dashboard", link: ~p"/dashboard"}
+        %{name: "Wishlists", link: ~p"/wishlist/manage"}
       ])
 
     {:ok, socket}
@@ -96,7 +97,10 @@ defmodule WishlistWeb.DashboardLive do
 
   def handle_event("create_wishlist", %{"name" => name}, socket) do
     new_id = UUID.uuid4()
-    updated_wishlists = [%Wishlist.Model{id: new_id, name: name} | socket.assigns.wishlists]
+
+    updated_wishlists = [
+      %WishlistModel{id: new_id, name: name} | socket.assigns.wishlists
+    ]
 
     Wishlist.upsert_wishlist(%{
       id: new_id,

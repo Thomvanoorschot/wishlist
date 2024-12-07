@@ -1,12 +1,12 @@
 defmodule WishlistWeb.Layouts do
-  import SaladUI.Breadcrumb
-  import SaladUI.Button
-  import SaladUI.DropdownMenu
-  import SaladUI.Input
-  import SaladUI.Menu
-  import SaladUI.Sheet
   import SaladUI.Tooltip
+  import SaladUI.Sheet
+  import SaladUI.Button
+  import SaladUI.Breadcrumb
+  import SaladUI.Input
+  import SaladUI.DropdownMenu
   import SaladUI.Avatar
+  import SaladUI.Menu
 
   @moduledoc """
   This module holds different layouts used by your application.

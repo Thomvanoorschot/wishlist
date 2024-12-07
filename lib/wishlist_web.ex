@@ -84,8 +84,9 @@ defmodule WishlistWeb do
       # HTML escaping functionality
       import Phoenix.HTML
       # Core UI components and translation
-      import WishlistWeb.CoreComponents
       import WishlistWeb.Gettext
+      import WishlistWeb.Components.Icon
+      import WishlistWeb.Components.Label
 
       import WishlistWeb.LayoutHelpers
 

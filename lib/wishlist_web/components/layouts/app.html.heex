@@ -9,18 +9,14 @@
         <span class="sr-only">Acme Inc</span>
       </.link>
       <.tooltip>
-        <.link navigate={~p"/"} class={nav_link_class(@current_page, :home)}>
-          <.icon name="hero-arrow-path" class="h-5 w-5" />
-          <span class="sr-only">Home</span>
+        <.link
+          navigate={~p"/wishlist/manage"}
+          class={nav_link_class(@current_page, :manage_wishlists)}
+        >
+          <.icon name="hero-gift" class="h-5 w-5" />
+          <span class="sr-only">Wishlists</span>
         </.link>
-        <.tooltip_content side="right">Home</.tooltip_content>
-      </.tooltip>
-      <.tooltip>
-        <.link navigate={~p"/dashboard"} class={nav_link_class(@current_page, :dashboard)}>
-          <.icon name="hero-arrow-path" class="h-5 w-5" />
-          <span class="sr-only">Dashboard</span>
-        </.link>
-        <.tooltip_content side="right">Dashboard</.tooltip_content>
+        <.tooltip_content side="right">Wishlists</.tooltip_content>
       </.tooltip>
     </nav>
     <nav class="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
@@ -55,18 +51,11 @@
               <span class="sr-only">Acme Inc</span>
             </.link>
             <.link
-              navigate={~p"/"}
-              class={nav_link_class(@current_page, :home)}
+              navigate={~p"/wishlist/manage"}
+              class={nav_link_class(@current_page, :manage_wishlists)}
               class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
             >
-              <.icon name="hero-arrow-path" class="h-5 w-5" /> Home
-            </.link>
-            <.link
-              navigate={~p"/dashboard"}
-              class={nav_link_class(@current_page, :dashboard)}
-              class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-            >
-              <.icon name="hero-arrow-path" class="h-5 w-5" /> Dashboard
+              <.icon name="hero-gift" class="h-5 w-5" /> Wishlists
             </.link>
             <.link
               href="#"

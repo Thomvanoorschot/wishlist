@@ -1,6 +1,6 @@
-defmodule Wishlist.Wishlist.WishlistDb.WithProducts do
-  alias Wishlist.Product
-  alias Wishlist.Wishlist
+defmodule Wishlist.Wishlist.Queries.WishlistDTO do
+  alias Wishlist.Product.Models.Product
+  alias Wishlist.Wishlist.Models.WishlistModel
 
   defstruct [
     :id,
@@ -24,7 +24,7 @@ defmodule Wishlist.Wishlist.WishlistDb.WithProducts do
         wishlist_items
         |> Enum.filter(& &1.product_id)
         |> Enum.map(fn item ->
-          %Product.Model{
+          %Product{
             id: item.product_id,
             name: item.product_name,
             category: item.product_category,
@@ -32,7 +32,7 @@ defmodule Wishlist.Wishlist.WishlistDb.WithProducts do
           }
         end)
 
-      %Wishlist.Model{
+      %WishlistModel{
         id: first_item.id,
         user_id: first_item.user_id,
         name: first_item.name,

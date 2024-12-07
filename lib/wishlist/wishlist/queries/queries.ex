@@ -1,4 +1,4 @@
-defmodule Wishlist.Wishlist.Queries do
+defmodule Wishlist.Wishlist.Queries.Q do
   use AyeSQL, repo: Wishlist.Repo
 
   defqueries("queries.sql")

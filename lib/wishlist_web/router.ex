@@ -17,8 +17,7 @@ defmodule WishlistWeb.Router do
   scope "/", WishlistWeb do
     pipe_through :browser
 
-    live "/", Home
-    live "/dashboard", DashboardLive
+    live "/wishlist/manage", Live.ManageWishlists
   end
 
   # Other scopes may use custom stacks.

@@ -1,3 +1,3 @@
-defmodule Wishlist.Product.Model do
+defmodule Wishlist.Product.Models.Product do
   defstruct [:id, :name, :category, :price]
 end
