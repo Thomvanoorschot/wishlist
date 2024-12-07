@@ -32,8 +32,6 @@ defmodule Wishlist.Wishlist.WishlistDb.WithProducts do
           }
         end)
 
-      # |> Enum.sort_by(& &1.inserted_at, {:desc, DateTime})
-
       %Wishlist.Model{
         id: first_item.id,
         user_id: first_item.user_id,

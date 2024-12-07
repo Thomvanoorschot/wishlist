@@ -21,7 +21,7 @@ import "phoenix_html";
 import { Socket } from "phoenix";
 import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
-import { SearchModal } from "../../lib/wishlist_web/components/search_modal";
+import { SearchModal } from "./search_modal";
 
 let Hooks = {};
 Hooks.SearchModal = SearchModal;

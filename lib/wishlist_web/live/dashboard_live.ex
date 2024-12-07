@@ -1,10 +1,10 @@
-defmodule WishlistWeb.Dashboard do
+defmodule WishlistWeb.DashboardLive do
   use WishlistWeb, :live_view
 
   alias Wishlist.Product
   alias Wishlist.Wishlist
 
-  import WishlistWeb.SearchModal
+  import WishlistWeb.Components.SearchModal
   import SaladUI.Button
   import SaladUI.Card
   import SaladUI.Accordion
@@ -48,29 +48,12 @@ defmodule WishlistWeb.Dashboard do
   end
 
   def handle_event("add_product_to_list", %{"product_id" => product_id}, socket) do
-    product = Enum.find(socket.assigns.search_entries, fn item -> item.id == product_id end)
-
-    Wishlist.add_to_wishlist(socket.assigns.selected_wishlist_id, product_id)
-
-    updated_wishlists =
-      Enum.map(socket.assigns.wishlists, fn wishlist ->
-        if wishlist.id == socket.assigns.selected_wishlist_id do
-          updated_products = [product | wishlist.products]
-
-          %{
-            wishlist
-            | products: updated_products,
-              total_cost:
-                Enum.reduce(updated_products, Decimal.new(0), fn product, acc ->
-                  Decimal.add(acc, product.price)
-                end)
-          }
-        else
-          wishlist
-        end
-      end)
-
-    products = Product.search(socket.assigns.search_query)
+    {:ok, updated_wishlists, products} =
+      Wishlist.add_to_wishlist_and_update_query(
+        socket.assigns.selected_wishlist_id,
+        product_id,
+        socket.assigns.search_query
+      )
 
     socket =
       assign(socket,

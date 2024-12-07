@@ -1,4 +1,4 @@
-defmodule WishlistWeb.SearchModal do
+defmodule WishlistWeb.Components.SearchModal do
   use WishlistWeb, :live_component
 
   alias Phoenix.LiveView.JS
