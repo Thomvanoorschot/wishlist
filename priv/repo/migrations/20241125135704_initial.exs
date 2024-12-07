@@ -1,4 +1,4 @@
-defmodule Wishlist.Repo.Migrations.Initial do
+defmodule CadeauCompas.Repo.Migrations.Initial do
   use Ecto.Migration
 
   def change do

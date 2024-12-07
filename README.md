@@ -1,4 +1,4 @@
-# Wishlist
+# CadeauCompas
 
 To start your Phoenix server:
 

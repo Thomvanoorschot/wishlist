@@ -9,8 +9,8 @@ module.exports = {
   content: [
     "../deps/salad_ui/lib/**/*.ex",
     "./js/**/*.js",
-    "../lib/wishlist_web.ex",
-    "../lib/wishlist_web/**/*.*ex",
+    "../lib/cadeau_compas_web.ex",
+    "../lib/cadeau_compas_web/**/*.*ex",
   ],
   theme: {
     extend: {

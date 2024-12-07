@@ -1,7 +1,7 @@
 import Config
 
 # Configure your database
-config :wishlist, Wishlist.Repo,
+config :cadeau_compas, CadeauCompas.Repo,
   username: "postgres",
   password: "postgres",
   hostname: "localhost",
@@ -18,7 +18,7 @@ config :elixir, :dbg_callback, fn entry -> entry end
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we can use it
 # to bundle .js and .css sources.
-config :wishlist, WishlistWeb.Endpoint,
+config :cadeau_compas, CadeauCompasWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
   # http: [ip: {127, 0, 0, 1}, port: 4000],
@@ -28,8 +28,8 @@ config :wishlist, WishlistWeb.Endpoint,
   debug_errors: true,
   secret_key_base: "ccfyEfy45ZJRKefX/QhItsl9HZTg/UyDGEmcI1HgLktJz4rdaXNHkiJXyKkaEmq5",
   watchers: [
-    esbuild: {Esbuild, :install_and_run, [:wishlist, ~w(--sourcemap=inline --watch)]},
-    tailwind: {Tailwind, :install_and_run, [:wishlist, ~w(--watch)]}
+    esbuild: {Esbuild, :install_and_run, [:cadeau_compas, ~w(--sourcemap=inline --watch)]},
+    tailwind: {Tailwind, :install_and_run, [:cadeau_compas, ~w(--watch)]}
   ]
 
 # ## SSL Support
@@ -56,17 +56,17 @@ config :wishlist, WishlistWeb.Endpoint,
 # different ports.
 
 # Watch static and templates for browser reloading.
-config :wishlist, WishlistWeb.Endpoint,
+config :cadeau_compas, CadeauCompasWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r"priv/static/(?!uploads/).*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/wishlist_web/(controllers|live|components)/.*(ex|heex)$"
+      ~r"lib/cadeau_compas_web/(controllers|live|components)/.*(ex|heex)$"
     ]
   ]
 
 # Enable dev routes for dashboard and mailbox
-config :wishlist, dev_routes: true
+config :cadeau_compas, dev_routes: true
 
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
@@ -88,4 +88,4 @@ config :phoenix_live_view,
 config :swoosh, :api_client, false
 
 # Path to install SaladUI components
-config :salad_ui, components_path: Path.join(File.cwd!(), "lib/wishlist_web/components")
+config :salad_ui, components_path: Path.join(File.cwd!(), "lib/cadeau_compas_web/components")

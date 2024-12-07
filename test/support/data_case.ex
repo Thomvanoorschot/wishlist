@@ -1,4 +1,4 @@
-defmodule Wishlist.DataCase do
+defmodule CadeauCompas.DataCase do
   @moduledoc """
   This module defines the setup for tests requiring
   access to the application's data layer.
@@ -10,7 +10,7 @@ defmodule Wishlist.DataCase do
   we enable the SQL sandbox, so changes done to the database
   are reverted at the end of every test. If you are using
   PostgreSQL, you can even run database tests asynchronously
-  by setting `use Wishlist.DataCase, async: true`, although
+  by setting `use CadeauCompas.DataCase, async: true`, although
   this option is not recommended for other databases.
   """
 
@@ -18,17 +18,17 @@ defmodule Wishlist.DataCase do
 
   using do
     quote do
-      alias Wishlist.Repo
+      alias CadeauCompas.Repo
 
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
-      import Wishlist.DataCase
+      import CadeauCompas.DataCase
     end
   end
 
   setup tags do
-    Wishlist.DataCase.setup_sandbox(tags)
+    CadeauCompas.DataCase.setup_sandbox(tags)
     :ok
   end
 
@@ -36,7 +36,7 @@ defmodule Wishlist.DataCase do
   Sets up the sandbox based on the test tags.
   """
   def setup_sandbox(tags) do
-    pid = Ecto.Adapters.SQL.Sandbox.start_owner!(Wishlist.Repo, shared: not tags[:async])
+    pid = Ecto.Adapters.SQL.Sandbox.start_owner!(CadeauCompas.Repo, shared: not tags[:async])
     on_exit(fn -> Ecto.Adapters.SQL.Sandbox.stop_owner(pid) end)
   end
 

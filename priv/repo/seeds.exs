@@ -1,6 +1,7 @@
 # priv/repo/seeds.exs
-alias Wishlist.Store
-alias Wishlist.Product
+# TODO Fix
+alias CadeauCompas.Store
+alias CadeauCompas.Product
 
 # Generate a UUID for the store
 store_id = Ecto.UUID.generate()

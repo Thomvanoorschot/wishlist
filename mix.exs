@@ -1,9 +1,9 @@
-defmodule Wishlist.MixProject do
+defmodule CadeauCompas.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :wishlist,
+      app: :cadeau_compas,
       version: "0.1.0",
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -18,7 +18,7 @@ defmodule Wishlist.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {Wishlist.Application, []},
+      mod: {CadeauCompas.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end
@@ -81,10 +81,10 @@ defmodule Wishlist.MixProject do
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
-      "assets.build": ["tailwind wishlist", "esbuild wishlist"],
+      "assets.build": ["tailwind cadeau_compas", "esbuild cadeau_compas"],
       "assets.deploy": [
-        "tailwind wishlist --minify",
-        "esbuild wishlist --minify",
+        "tailwind cadeau_compas --minify",
+        "esbuild cadeau_compas --minify",
         "phx.digest"
       ]
     ]
