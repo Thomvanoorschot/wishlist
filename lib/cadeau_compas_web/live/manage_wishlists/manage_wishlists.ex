@@ -96,7 +96,7 @@ defmodule CadeauCompasWeb.Live.ManageWishlists do
   end
 
   def handle_event("create_wishlist", %{"name" => name}, socket) do
-    new_id = UUID.uuid4()
+    new_id = Ecto.UUID.generate()
 
     updated_wishlists = [
       %WishlistModel{id: new_id, name: name} | socket.assigns.wishlists

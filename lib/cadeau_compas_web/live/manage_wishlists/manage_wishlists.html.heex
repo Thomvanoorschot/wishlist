@@ -8,13 +8,7 @@
     <.card_description>You can add several products to your wishlist</.card_description>
   </.card_header>
   <.card_content>
-    <.form
-      :let={f}
-      for={%{}}
-      class="w-2/3 space-y-6"
-      phx-submit="create_wishlist"
-      autocomplete="off"
-    >
+    <.form :let={f} for={%{}} class="w-2/3 space-y-6" phx-submit="create_wishlist" autocomplete="off">
       <% f = %{f | data: %{name: ""}} %>
       <.form_item>
         <.form_label error={not Enum.empty?(f[:name].errors)}>
@@ -38,10 +32,7 @@
 </.card>
 <%= for {wishlist, index} <- Enum.with_index(@wishlists)  do %>
   <.card class="max-w-4xl mx auto">
-    <.accordion_trigger
-      open={wishlist.products != [] && index == 0}
-      class="flex flex-row-reverse p-2"
-    >
+    <.accordion_trigger open={wishlist.products != [] && index == 0} class="flex flex-row-reverse p-2">
       <.card_header class="w-full pl-2">
         <div class="flex items-center justify-between">
           <div>
@@ -65,26 +56,17 @@
               </.dropdown_menu_trigger>
               <.dropdown_menu_content align="end">
                 <.menu class="w-56">
-                  <.menu_item
-                    phx-click={show_modal("edit-dialog-#{wishlist.id}")}
-                    onclick="event.preventDefault(); "
-                  >
+                  <.menu_item phx-click={show_modal("edit-dialog-#{wishlist.id}")} onclick="event.preventDefault(); ">
                     <.icon name="hero-pencil-square" class="mr-2 h-4 w-4" />
                     <span>Edit</span>
                     <.menu_shortcut>⌘P</.menu_shortcut>
                   </.menu_item>
-                  <.menu_item
-                    phx-click={show_modal("delete-dialog-#{wishlist.id}")}
-                    onclick="event.preventDefault(); "
-                  >
+                  <.menu_item phx-click={show_modal("delete-dialog-#{wishlist.id}")} onclick="event.preventDefault(); ">
                     <.icon name="hero-trash" class="mr-2 h-4 w-4" />
                     <span>Delete wishlist</span>
                     <.menu_shortcut>⌘B</.menu_shortcut>
                   </.menu_item>
-                  <.menu_item
-                    phx-click="toggle_delete_products"
-                    onclick="event.preventDefault(); "
-                  >
+                  <.menu_item phx-click="toggle_delete_products" onclick="event.preventDefault(); ">
                     <.icon name="hero-minus-circle" class="mr-2 h-4 w-4" />
                     <span>Delete products</span>
                     <.menu_shortcut>⌘B</.menu_shortcut>
@@ -102,23 +84,14 @@
           <%= for product <- wishlist.products do %>
             <div class="flex items-center">
               <span class="relative flex shrink-0 overflow-hidden rounded-full h-9 w-9">
-                <img
-                  class="aspect-square h-full w-full"
-                  alt={product.name}
-                  src="https://placehold.co/80"
-                />
+                <img class="aspect-square h-full w-full" alt={product.name} src="https://placehold.co/80" />
               </span>
               <div class="ml-4 space-y-1">
                 <p class="text-sm font-medium leading-none"><%= product.name %></p>
                 <p class="text-sm text-muted-foreground">€<%= product.price %></p>
               </div>
               <%= if @delete_products_enabled do %>
-                <div
-                  phx-click="delete_product_from_list"
-                  phx-value-wishlist_id={wishlist.id}
-                  phx-value-product_id={product.id}
-                  class="ml-auto"
-                >
+                <div phx-click="delete_product_from_list" phx-value-wishlist_id={wishlist.id} phx-value-product_id={product.id} class="ml-auto">
                   <.icon name="hero-minus-circle-solid" class="7 bg-destructive" />
                 </div>
               <% end %>
@@ -128,10 +101,7 @@
       </.card_content>
     </.accordion_content>
   </.card>
-  <.dialog
-    id={"delete-dialog-#{wishlist.id}"}
-    on_cancel={hide_modal("delete-dialog-#{wishlist.id}")}
-  >
+  <.dialog id={"delete-dialog-#{wishlist.id}"} on_cancel={hide_modal("delete-dialog-#{wishlist.id}")}>
     <.dialog_header>
       <.dialog_title>Are you absolutely sure?</.dialog_title>
       <.dialog_description>
@@ -171,13 +141,7 @@
         <.label for={f[:name].id} class="text-right">
           Name
         </.label>
-        <.input
-          autocomplete="off"
-          data-1p-ignore
-          data-lpignore="true"
-          field={f[:name]}
-          class="col-span-3"
-        />
+        <.input autocomplete="off" data-1p-ignore data-lpignore="true" field={f[:name]} class="col-span-3" />
       </div>
 
       <div class="flex justify-end">

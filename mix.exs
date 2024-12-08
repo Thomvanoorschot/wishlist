@@ -9,7 +9,11 @@ defmodule CadeauCompas.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      dialyzer: [
+        ignore_warnings: "dialyzer.ignore-warnings",
+        halt_on_warning: true
+      ]
     ]
   end
 
@@ -44,13 +48,7 @@ defmodule CadeauCompas.MixProject do
       {:phoenix_live_dashboard, "~> 0.8.3"},
       {:esbuild, "~> 0.8", runtime: Mix.env() == :dev},
       {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
-      {:heroicons,
-       github: "tailwindlabs/heroicons",
-       tag: "v2.1.1",
-       sparse: "optimized",
-       app: false,
-       compile: false,
-       depth: 1},
+      {:heroicons, github: "tailwindlabs/heroicons", tag: "v2.1.1", sparse: "optimized", app: false, compile: false, depth: 1},
       {:swoosh, "~> 1.5"},
       {:finch, "~> 0.13"},
       {:telemetry_metrics, "~> 1.0"},
@@ -61,7 +59,6 @@ defmodule CadeauCompas.MixProject do
       {:bandit, "~> 1.5"},
       {:ayesql, "~> 1.1"},
       {:faker, "~> 0.17", only: [:dev, :test]},
-      {:elixir_uuid, "~> 1.2"},
 
       # SaladUI
       {:salad_ui, "~> 0.13.0"}

@@ -1,0 +1,7 @@
+{
+  "editor.wordWrapColumn": 150,
+  "[elixir]": {
+    "editor.wordWrap": "off",
+    "editor.wordWrapColumn": 0
+  }
+}
