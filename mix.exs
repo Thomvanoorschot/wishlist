@@ -59,6 +59,7 @@ defmodule CadeauCompas.MixProject do
       {:bandit, "~> 1.5"},
       {:ayesql, "~> 1.1"},
       {:faker, "~> 0.17", only: [:dev, :test]},
+      {:dialyxir, "~> 1.4.5", only: [:dev], runtime: false},
 
       # SaladUI
       {:salad_ui, "~> 0.13.0"}

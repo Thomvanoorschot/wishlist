@@ -22,9 +22,11 @@ import { Socket } from "phoenix";
 import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
 import { SearchModal } from "./search_modal";
+import { SearchModalWishlistId } from "./search_modal_wishlist_id";
 
 let Hooks = {};
 Hooks.SearchModal = SearchModal;
+Hooks.SearchModalWishlistId = SearchModalWishlistId;
 
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")

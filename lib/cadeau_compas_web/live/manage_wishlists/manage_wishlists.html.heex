@@ -1,3 +1,4 @@
+<div id="selected_wishlist"></div>
 <.card>
   <.card_header>
     <%= if @wishlists == [] do %>
@@ -14,16 +15,7 @@
         <.form_label error={not Enum.empty?(f[:name].errors)}>
           What would you like to call your wishlist?
         </.form_label>
-        <.input
-          field={f[:name]}
-          type="text"
-          placeholder="The name of your wishlist"
-          phx-debounce="500"
-          required
-          autocomplete="off"
-          data-1p-ignore
-          data-lpignore="true"
-        />
+        <.input field={f[:name]} type="text" placeholder="The name of your wishlist" phx-debounce="500" required autocomplete="off" data-1p-ignore data-lpignore="true" />
         <.form_message field={f[:name]} />
       </.form_item>
       <.button type="submit">Create</.button>
@@ -43,7 +35,7 @@
           </div>
           <div class="flex gap-2">
             <.button phx-click={
-              JS.push("add_wishlist_clicked", value: %{wishlist_id: wishlist.id})
+              JS.set_attribute({"wishlist_id", wishlist.id}, to: "#selected_wishlist")
               |> open_search_modal()
             }>
               Add item
@@ -129,14 +121,7 @@
       </.dialog_description>
     </.dialog_header>
 
-    <.form
-      :let={f}
-      for={%{"name" => wishlist.name}}
-      as={:"wishlist_#{wishlist.id}"}
-      phx-submit="edit_wishlist"
-      id={"edit-wishlist-form-#{wishlist.id}"}
-      class="flex flex-col gap-4"
-    >
+    <.form :let={f} for={%{"name" => wishlist.name}} as={:"wishlist_#{wishlist.id}"} phx-submit="edit_wishlist" id={"edit-wishlist-form-#{wishlist.id}"} class="flex flex-col gap-4">
       <div class="grid grid-cols-4 items-center gap-4">
         <.label for={f[:name].id} class="text-right">
           Name
@@ -155,6 +140,7 @@
 <.search_modal search_entries={@search_entries} placeholder="Search for any product">
   <:entry_slot :let={entry}>
     <.link
+      phx-hook="SearchModalWishlistId"
       phx-click="add_product_to_list"
       phx-value-product_id={entry.id}
       id={"#{entry.id}"}

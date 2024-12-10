@@ -31,11 +31,6 @@ defmodule CadeauCompasWeb.Live.ManageWishlists do
     {:ok, socket}
   end
 
-  def handle_event("add_wishlist_clicked", %{"wishlist_id" => wishlist_id}, socket) do
-    socket = assign(socket, :selected_wishlist_id, wishlist_id)
-    {:noreply, socket}
-  end
-
   def handle_event("update_search_query", %{"search" => %{"query" => ""}}, socket) do
     socket = assign(socket, search_entries: [], search_query: "")
     {:noreply, socket}
@@ -48,13 +43,25 @@ defmodule CadeauCompasWeb.Live.ManageWishlists do
     {:noreply, socket}
   end
 
-  def handle_event("add_product_to_list", %{"product_id" => product_id}, socket) do
-    {:ok, updated_wishlists, products} =
+  def handle_event("add_product_to_list", %{"product_id" => product_id, "wishlist_id" => wishlist_id}, socket) do
+    wishlist = Enum.find(socket.assigns.wishlists, fn wishlist -> wishlist.id == wishlist_id end)
+
+    {:ok, updated_wishlist, products} =
       Wishlist.add_to_wishlist_and_update_query(
-        socket.assigns.selected_wishlist_id,
+        wishlist,
         product_id,
         socket.assigns.search_query
       )
+
+    # TODO The selected_wishlist is not set so this bugs out the list
+    updated_wishlists =
+      Enum.map(socket.assigns.wishlists, fn wishlist ->
+        if wishlist.id == updated_wishlist.id do
+          updated_wishlist
+        else
+          wishlist
+        end
+      end)
 
     socket =
       assign(socket,

@@ -34,15 +34,25 @@ ORDER BY
   WP.inserted_at DESC;
 
 -- name: insert_to_wishlist
-INSERT INTO
-  wishlist_products (wishlist_id, product_id, inserted_at, updated_at)
-VALUES
-  (
-    :wishlist_id :: text :: uuid,
-    :product_id :: text :: uuid,
-    now(),
-    now()
-  );
+WITH inserted_row AS (
+  INSERT INTO
+    wishlist_products (wishlist_id, product_id, inserted_at, updated_at)
+  VALUES
+    (
+      :wishlist_id :: text :: uuid,
+      :product_id :: text :: uuid,
+      now(),
+      now()
+    ) RETURNING product_id
+)
+SELECT
+  P.id :: text,
+  P.name,
+  P.category,
+  P.price
+FROM
+  inserted_row IR
+  JOIN products P ON P.id = IR.product_id;
 
 -- name: delete_wishlist
 DELETE FROM
