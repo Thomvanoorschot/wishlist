@@ -53,14 +53,10 @@ defmodule CadeauCompasWeb.Live.ManageWishlists do
         socket.assigns.search_query
       )
 
-    # TODO The selected_wishlist is not set so this bugs out the list
     updated_wishlists =
-      Enum.map(socket.assigns.wishlists, fn wishlist ->
-        if wishlist.id == updated_wishlist.id do
-          updated_wishlist
-        else
-          wishlist
-        end
+      Enum.map(socket.assigns.wishlists, fn
+        %WishlistModel{id: ^wishlist_id} -> updated_wishlist
+        wishlist -> wishlist
       end)
 
     socket =
@@ -73,29 +69,15 @@ defmodule CadeauCompasWeb.Live.ManageWishlists do
     {:noreply, socket}
   end
 
-  def handle_event(
-        "delete_product_from_list",
-        %{"wishlist_id" => wishlist_id, "product_id" => product_id},
-        socket
-      ) do
-    Wishlist.delete_product_from_list(wishlist_id, product_id)
+  def handle_event("delete_product_from_list", %{"wishlist_id" => wishlist_id, "product_id" => product_id}, socket) do
+    wishlist = Enum.find(socket.assigns.wishlists, fn wishlist -> wishlist.id == wishlist_id end)
+
+    {:ok, updated_wishlist} = Wishlist.delete_product_from_list(wishlist, product_id)
 
     updated_wishlists =
-      Enum.map(socket.assigns.wishlists, fn wishlist ->
-        if wishlist.id == wishlist_id do
-          updated_products = Enum.filter(wishlist.products, fn item -> item.id != product_id end)
-          # TODO Reduce the total price of the cost also do this in upside method
-          %{
-            wishlist
-            | products: updated_products,
-              total_cost:
-                Enum.reduce(updated_products, Decimal.new(0), fn product, acc ->
-                  Decimal.add(acc, product.price)
-                end)
-          }
-        else
-          wishlist
-        end
+      Enum.map(socket.assigns.wishlists, fn
+        %WishlistModel{id: ^wishlist_id} -> updated_wishlist
+        wishlist -> wishlist
       end)
 
     socket = assign(socket, wishlists: updated_wishlists)
@@ -103,21 +85,15 @@ defmodule CadeauCompasWeb.Live.ManageWishlists do
   end
 
   def handle_event("create_wishlist", %{"name" => name}, socket) do
-    new_id = Ecto.UUID.generate()
+    case Wishlist.upsert_wishlist(%WishlistModel{user_id: "b1c0d3fa-5489-4d13-ab2c-7cc2241fe820", name: name}) do
+      {:ok, wishlist} ->
+        updated_wishlists = [
+          wishlist | socket.assigns.wishlists
+        ]
 
-    updated_wishlists = [
-      %WishlistModel{id: new_id, name: name} | socket.assigns.wishlists
-    ]
-
-    Wishlist.upsert_wishlist(%{
-      id: new_id,
-      user_id: "b1c0d3fa-5489-4d13-ab2c-7cc2241fe820",
-      name: name
-    })
-
-    socket = assign(socket, wishlists: updated_wishlists, delete_products_enabled: false)
-
-    {:noreply, socket}
+        socket = assign(socket, wishlists: updated_wishlists, delete_products_enabled: false)
+        {:noreply, socket}
+    end
   end
 
   def handle_event("delete_wishlist", %{"wishlist_id" => wishlist_id}, socket) do

@@ -4,8 +4,14 @@ defmodule CadeauCompas.Wishlist do
   alias CadeauCompas.Product
   alias CadeauCompas.Product.Models.ProductModel
 
-  def upsert_wishlist(%{id: id, user_id: user_id, name: name}) do
-    Queries.Q.upsert_wishlist(id: id, user_id: user_id, name: name)
+  def upsert_wishlist(%WishlistModel{user_id: user_id, name: name} = wishlist) do
+    case Queries.Q.upsert_wishlist(id: Ecto.UUID.generate(), user_id: user_id, name: name) do
+      {:ok, [%{id: wishlist_id}]} ->
+        {:ok, %{wishlist | id: wishlist_id}}
+
+      {:error, _} = error ->
+        error
+    end
   end
 
   @spec get_with_products() :: list(WishlistModel.t())
@@ -16,39 +22,35 @@ defmodule CadeauCompas.Wishlist do
   end
 
   @spec add_to_wishlist_and_update_query(WishlistModel.t(), Ecto.UUID.t(), String.t()) :: {:ok, WishlistModel.t(), list(ProductModel.t())} | {:error, any()}
-  def add_to_wishlist_and_update_query(%WishlistModel{} = wishlist, product_id, query) do
-    params = [wishlist_id: wishlist.id, product_id: product_id]
+  def add_to_wishlist_and_update_query(%WishlistModel{id: wishlist_id, products: wishlist_products} = wishlist, product_id, query) do
+    params = [wishlist_id: wishlist_id, product_id: product_id]
 
     case Queries.Q.insert_to_wishlist(params, into: %ProductModel{}) do
       {:ok, inserted_product} ->
-        IO.inspect(wishlist.products)
-        updated_products = inserted_product ++ wishlist.products
-        IO.inspect(updated_products)
-
-        updated_total_cost = Enum.reduce(updated_products, Decimal.new(0), &Decimal.add(&2, &1.price))
-
-        updated_wishlist = %WishlistModel{
-          wishlist
-          | products: updated_products,
-            total_cost: updated_total_cost
-        }
-
-        IO.inspect(updated_wishlist)
+        updated_products = inserted_product ++ wishlist_products
         products = Product.search(query)
-
-        {:ok, updated_wishlist, products}
+        updated_total_cost = Enum.reduce(updated_products, Decimal.new(0), &Decimal.add(&2, &1.price))
+        {:ok, %{wishlist | products: updated_products, total_cost: updated_total_cost}, products}
 
       {:error, _} = error ->
         error
     end
   end
 
+  @spec delete_wishlist(any()) :: {:error, any()} | {:ok, any()}
   def delete_wishlist(wishlist_id) do
     Queries.Q.delete_wishlist(wishlist_id: wishlist_id)
   end
 
-  @spec delete_product_from_list(any(), any()) :: {:error, any()} | {:ok, any()}
-  def delete_product_from_list(wishlist_id, product_id) do
-    Queries.Q.delete_product_from_list(wishlist_id: wishlist_id, product_id: product_id)
+  def delete_product_from_list(%WishlistModel{products: products} = wishlist, product_id) do
+    case Queries.Q.delete_product_from_list(wishlist_id: wishlist.id, product_id: product_id) do
+      {:ok, []} ->
+        updated_products = Enum.reject(products, &(&1.id == product_id))
+        updated_total_cost = Enum.reduce(updated_products, Decimal.new(0), &Decimal.add(&2, &1.price))
+        {:ok, %{wishlist | products: updated_products, total_cost: updated_total_cost}}
+
+      {:error, []} ->
+        {:error, wishlist}
+    end
   end
 end
