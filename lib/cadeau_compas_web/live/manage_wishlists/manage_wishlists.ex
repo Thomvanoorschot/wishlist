@@ -44,66 +44,67 @@ defmodule CadeauCompasWeb.Live.ManageWishlists do
   end
 
   def handle_event("add_product_to_list", %{"product_id" => product_id, "wishlist_id" => wishlist_id}, socket) do
-    wishlist = Enum.find(socket.assigns.wishlists, fn wishlist -> wishlist.id == wishlist_id end)
+    with %WishlistModel{} = wishlist <- Enum.find(socket.assigns.wishlists, &(&1.id == wishlist_id)),
+         {:ok, updated_wishlist, products} <-
+           Wishlist.add_to_wishlist_and_update_query(wishlist, product_id, socket.assigns.search_query) do
+      updated_wishlists =
+        Enum.map(socket.assigns.wishlists, fn
+          %WishlistModel{id: ^wishlist_id} -> updated_wishlist
+          wishlist -> wishlist
+        end)
 
-    {:ok, updated_wishlist, products} =
-      Wishlist.add_to_wishlist_and_update_query(
-        wishlist,
-        product_id,
-        socket.assigns.search_query
-      )
-
-    updated_wishlists =
-      Enum.map(socket.assigns.wishlists, fn
-        %WishlistModel{id: ^wishlist_id} -> updated_wishlist
-        wishlist -> wishlist
-      end)
-
-    socket =
-      assign(socket,
-        wishlists: updated_wishlists,
-        search_entries: products,
-        delete_products_enabled: false
-      )
-
-    {:noreply, socket}
+      {:noreply,
+       assign(socket,
+         wishlists: updated_wishlists,
+         search_entries: products,
+         delete_products_enabled: false
+       )}
+    else
+      _ -> {:noreply, socket}
+    end
   end
 
   def handle_event("delete_product_from_list", %{"wishlist_id" => wishlist_id, "product_id" => product_id}, socket) do
-    wishlist = Enum.find(socket.assigns.wishlists, fn wishlist -> wishlist.id == wishlist_id end)
+    with %WishlistModel{} = wishlist <- Enum.find(socket.assigns.wishlists, &(&1.id == wishlist_id)),
+         {:ok, updated_wishlist} <- Wishlist.delete_product_from_list(wishlist, product_id) do
+      updated_wishlists =
+        Enum.map(socket.assigns.wishlists, fn
+          %WishlistModel{id: ^wishlist_id} -> updated_wishlist
+          wishlist -> wishlist
+        end)
 
-    {:ok, updated_wishlist} = Wishlist.delete_product_from_list(wishlist, product_id)
-
-    updated_wishlists =
-      Enum.map(socket.assigns.wishlists, fn
-        %WishlistModel{id: ^wishlist_id} -> updated_wishlist
-        wishlist -> wishlist
-      end)
-
-    socket = assign(socket, wishlists: updated_wishlists)
-    {:noreply, socket}
+      {:noreply, assign(socket, wishlists: updated_wishlists)}
+    else
+      _ -> {:noreply, socket}
+    end
   end
 
   def handle_event("create_wishlist", %{"name" => name}, socket) do
-    case Wishlist.upsert_wishlist(%WishlistModel{user_id: "b1c0d3fa-5489-4d13-ab2c-7cc2241fe820", name: name}) do
+    case Wishlist.upsert_wishlist(%WishlistModel{
+           user_id: "b1c0d3fa-5489-4d13-ab2c-7cc2241fe820",
+           name: name
+         }) do
       {:ok, wishlist} ->
-        updated_wishlists = [
-          wishlist | socket.assigns.wishlists
-        ]
+        updated_wishlists = [wishlist | socket.assigns.wishlists]
 
-        socket = assign(socket, wishlists: updated_wishlists, delete_products_enabled: false)
+        {:noreply,
+         assign(socket,
+           wishlists: updated_wishlists,
+           delete_products_enabled: false
+         )}
+
+      _ ->
         {:noreply, socket}
     end
   end
 
   def handle_event("delete_wishlist", %{"wishlist_id" => wishlist_id}, socket) do
-    updated_wishlist =
-      Enum.filter(socket.assigns.wishlists, fn item -> item.id != wishlist_id end)
-
-    Wishlist.delete_wishlist(wishlist_id)
-    socket = assign(socket, wishlists: updated_wishlist)
-
-    {:noreply, socket}
+    with {:ok, _} <- Wishlist.delete_wishlist(wishlist_id) do
+      updated_wishlists = Enum.reject(socket.assigns.wishlists, &(&1.id == wishlist_id))
+      {:noreply, assign(socket, wishlists: updated_wishlists)}
+    else
+      _ -> {:noreply, socket}
+    end
   end
 
   def handle_event("edit_wishlist", params, socket) do
