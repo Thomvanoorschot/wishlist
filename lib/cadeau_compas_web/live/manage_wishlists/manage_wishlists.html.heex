@@ -121,12 +121,13 @@
       </.dialog_description>
     </.dialog_header>
 
-    <.form :let={f} for={%{"name" => wishlist.name}} as={:"wishlist_#{wishlist.id}"} phx-submit="edit_wishlist" id={"edit-wishlist-form-#{wishlist.id}"} class="flex flex-col gap-4">
+    <.form :let={f} for={%{"name" => wishlist.name, "wishlist_id" => wishlist.id}} phx-submit="edit_wishlist" id={"edit-wishlist-form-#{wishlist.id}"} class="flex flex-col gap-4">
       <div class="grid grid-cols-4 items-center gap-4">
         <.label for={f[:name].id} class="text-right">
           Name
         </.label>
         <.input autocomplete="off" data-1p-ignore data-lpignore="true" field={f[:name]} class="col-span-3" />
+        <.input field={f[:wishlist_id]} class="hidden" />
       </div>
 
       <div class="flex justify-end">

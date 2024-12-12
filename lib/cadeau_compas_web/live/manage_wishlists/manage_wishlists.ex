@@ -107,30 +107,19 @@ defmodule CadeauCompasWeb.Live.ManageWishlists do
     end
   end
 
-  def handle_event("edit_wishlist", params, socket) do
-    # Find the key that starts with "wishlist_"
-    {"wishlist_" <> wishlist_id, wishlist_params} =
-      Enum.find(params, fn {key, _val} -> String.starts_with?(key, "wishlist_") end)
+  def handle_event("edit_wishlist", %{"name" => name, "wishlist_id" => wishlist_id}, socket) do
+    with %WishlistModel{} = wishlist <- Enum.find(socket.assigns.wishlists, &(&1.id == wishlist_id)),
+         {:ok, updated_wishlist} <- Wishlist.upsert_wishlist(%{wishlist | name: name}) do
+      updated_wishlists =
+        Enum.map(socket.assigns.wishlists, fn
+          %WishlistModel{id: ^wishlist_id} -> updated_wishlist
+          wishlist -> wishlist
+        end)
 
-    name = wishlist_params["name"]
-
-    updated_wishlists =
-      Enum.map(socket.assigns.wishlists, fn wishlist ->
-        if wishlist.id == wishlist_id do
-          %{wishlist | name: name}
-        else
-          wishlist
-        end
-      end)
-
-    Wishlist.upsert_wishlist(%{
-      id: wishlist_id,
-      user_id: "b1c0d3fa-5489-4d13-ab2c-7cc2241fe820",
-      name: name
-    })
-
-    socket = assign(socket, wishlists: updated_wishlists, delete_products_enabled: false)
-    {:noreply, socket}
+      {:noreply, assign(socket, wishlists: updated_wishlists, delete_products_enabled: false)}
+    else
+      _ -> {:noreply, socket}
+    end
   end
 
   def handle_event("toggle_delete_products", %{}, socket) do
