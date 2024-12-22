@@ -1,5 +1,6 @@
 defmodule CadeauCompas.Wishlist do
   alias CadeauCompas.Wishlist.Queries
+  alias CadeauCompas.Wishlist.Queries.Q
   alias CadeauCompas.Wishlist.Models.WishlistModel
   alias CadeauCompas.Product
   alias CadeauCompas.Product.Models.ProductModel
@@ -9,7 +10,7 @@ defmodule CadeauCompas.Wishlist do
   end
 
   def upsert_wishlist(%WishlistModel{id: id, user_id: user_id, name: name} = wishlist) do
-    case Queries.Q.upsert_wishlist(id: id, user_id: user_id, name: name) do
+    case Q.upsert_wishlist(id: id, user_id: user_id, name: name) do
       {:ok, [%{id: wishlist_id}]} ->
         {:ok, %{wishlist | id: wishlist_id}}
 
@@ -19,7 +20,7 @@ defmodule CadeauCompas.Wishlist do
   end
 
   def get_with_products() do
-    {_, wishlists_dto} = Queries.Q.get_with_products([], into: Queries.WishlistDTO)
+    {_, wishlists_dto} = Q.get_with_products([], into: Queries.WishlistDTO)
 
     WishlistModel.list_from_dto(wishlists_dto)
   end
@@ -27,7 +28,7 @@ defmodule CadeauCompas.Wishlist do
   def add_to_wishlist_and_update_query(%WishlistModel{id: wishlist_id, products: wishlist_products} = wishlist, product_id, query) do
     params = [wishlist_id: wishlist_id, product_id: product_id]
 
-    case Queries.Q.insert_to_wishlist(params, into: %ProductModel{}) do
+    case Q.insert_to_wishlist(params, into: %ProductModel{}) do
       {:ok, inserted_product} ->
         updated_products = inserted_product ++ wishlist_products
         products = Product.search(query)
@@ -40,11 +41,11 @@ defmodule CadeauCompas.Wishlist do
   end
 
   def delete_wishlist(wishlist_id) do
-    Queries.Q.delete_wishlist(wishlist_id: wishlist_id)
+    Q.delete_wishlist(wishlist_id: wishlist_id)
   end
 
   def delete_product_from_list(%WishlistModel{products: products} = wishlist, product_id) do
-    case Queries.Q.delete_product_from_list(wishlist_id: wishlist.id, product_id: product_id) do
+    case Q.delete_product_from_list(wishlist_id: wishlist.id, product_id: product_id) do
       {:ok, []} ->
         updated_products = Enum.reject(products, &(&1.id == product_id))
         updated_total_cost = Enum.reduce(updated_products, Decimal.new(0), &Decimal.add(&2, &1.price))

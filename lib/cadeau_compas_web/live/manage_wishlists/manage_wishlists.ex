@@ -6,14 +6,7 @@ defmodule CadeauCompasWeb.Live.ManageWishlists do
   alias CadeauCompas.Wishlist
 
   import CadeauCompasWeb.Components.SearchModal
-  import SaladUI.Button
-  import SaladUI.Card
-  import SaladUI.Accordion
-  import SaladUI.Input
-  import SaladUI.Form
-  import SaladUI.DropdownMenu
-  import SaladUI.Menu
-  import SaladUI.Dialog
+  import SaladUI.{Button, Card, Accordion, Input, Form, DropdownMenu, Menu, Dialog}
 
   def mount(_params, _session, socket) do
     wishlists = Wishlist.get_with_products()

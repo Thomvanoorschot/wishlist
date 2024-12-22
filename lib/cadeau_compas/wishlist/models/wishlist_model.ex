@@ -1,6 +1,5 @@
 defmodule CadeauCompas.Wishlist.Models.WishlistModel do
   alias CadeauCompas.Product.Models.ProductModel
-  alias CadeauCompas.Wishlist.Queries.WishlistDTO
 
   defstruct [:id, :user_id, :name, :total_cost, :inserted_at, products: []]
 

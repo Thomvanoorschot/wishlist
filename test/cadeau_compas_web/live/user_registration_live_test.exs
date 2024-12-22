@@ -1,4 +1,4 @@
-defmodule CadeauCompasWeb.UserRegistrationLiveTest do
+defmodule CadeauCompasWeb.Live.UserRegistrationTest do
   use CadeauCompasWeb.ConnCase, async: true
 
   import Phoenix.LiveViewTest
