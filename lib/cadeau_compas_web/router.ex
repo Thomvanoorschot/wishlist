@@ -53,7 +53,7 @@ defmodule CadeauCompasWeb.Router do
     live_session :redirect_if_user_is_authenticated,
       on_mount: [{CadeauCompasWeb.UserAuth, :redirect_if_user_is_authenticated}] do
       live "/users/register", Live.UserRegistration, :new
-      # live "/users/log_in", UserLoginLive, :new
+      live "/users/log_in", Live.UserLogin, :new
       # live "/users/reset_password", UserForgotPasswordLive, :new
       # live "/users/reset_password/:token", UserResetPasswordLive, :edit
     end

@@ -15,7 +15,7 @@ defmodule CadeauCompasWeb.Live.UserRegistration do
       |> assign_form(changeset)
       |> assign(:current_page, :register_user)
       |> assign(:breadcrumbs, [
-        %{name: "Register", link: ~p"/wishlist/manage"}
+        %{name: "Register", link: ~p"/users/register"}
       ])
 
     {:ok, socket}

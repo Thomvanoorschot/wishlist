@@ -1,0 +1,52 @@
+<div class="mx-auto max-w-sm">
+  <.header class="text-center">
+    Log in to account
+    <:subtitle>
+      Don't have an account?
+      <.link navigate={~p"/users/register"} class="font-semibold text-brand hover:underline">
+        Sign up
+      </.link>
+      for an account now.
+    </:subtitle>
+  </.header>
+  <%!-- <.form for={@form} id="login_form" action={~p"/users/log_in"} phx-update="ignore">
+    <.input field={@form[:email]} type="email" label="Email" required /> <.input field={@form[:password]} type="password" label="Password" required />
+    <:actions>
+      <.input field={@form[:remember_me]} type="checkbox" label="Keep me logged in" />
+      <.link href={~p"/users/reset_password"} class="text-sm font-semibold">
+        Forgot your password?
+      </.link>
+    </:actions>
+
+    <:actions>
+      <.button phx-disable-with="Logging in..." class="w-full">
+        Log in <span aria-hidden="true">→</span>
+      </.button>
+    </:actions>
+  </.form> --%>
+
+  <.form class="space-y-6" for={@form} id="login_form-form" action={~p"/users/log_in"} phx-update="ignore">
+    <.form_item>
+      <.form_label>Email</.form_label>
+      <.form_control>
+        <.input field={@form[:email]} type="email" placeholder="myaccount@email.com" required phx-debounce="500" />
+      </.form_control>
+    </.form_item>
+    <.form_item>
+      <.form_control>
+        <div class="flex justify-between">
+          <.form_label>Password</.form_label>
+          <.link href={~p"/users/reset_password"} class="text-sm font-medium hover:underline leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+            Forgot your password?
+          </.link>
+        </div>
+        <.input field={@form[:password]} type="password" placeholder="Password" required />
+      </.form_control>
+    </.form_item>
+    <div class="mt-2 flex items-center justify-between gap-6">
+      <.button phx-disable-with="Logging in..." class="w-full">
+        Log in <span aria-hidden="true">→</span>
+      </.button>
+    </div>
+  </.form>
+</div>
