@@ -1256,6 +1256,10 @@ select {
   min-height: 80px;
 }
 
+.min-h-\[calc\(100vh-12rem\)\] {
+  min-height: calc(100vh - 12rem);
+}
+
 .w-0 {
   width: 0px;
 }

@@ -9,7 +9,8 @@ defmodule CadeauCompasWeb.Live.ManageWishlists do
   import SaladUI.{Button, Card, Accordion, Input, Form, DropdownMenu, Menu, Dialog}
 
   def mount(_params, _session, socket) do
-    wishlists = Wishlist.get_with_products()
+    %{id: user_id} = socket.assigns.current_user
+    wishlists = Wishlist.get_with_products(user_id)
 
     socket =
       socket
@@ -58,8 +59,10 @@ defmodule CadeauCompasWeb.Live.ManageWishlists do
   end
 
   def handle_event("delete_product_from_list", %{"wishlist_id" => wishlist_id, "product_id" => product_id}, socket) do
+    %{id: user_id} = socket.assigns.current_user
+
     with %WishlistModel{} = wishlist <- Enum.find(socket.assigns.wishlists, &(&1.id == wishlist_id)),
-         {:ok, updated_wishlist} <- Wishlist.delete_product_from_list(wishlist, product_id) do
+         {:ok, updated_wishlist} <- Wishlist.delete_product_from_list(%WishlistModel{wishlist | user_id: user_id}, product_id) do
       updated_wishlists =
         Enum.map(socket.assigns.wishlists, fn
           %WishlistModel{id: ^wishlist_id} -> updated_wishlist
@@ -73,8 +76,10 @@ defmodule CadeauCompasWeb.Live.ManageWishlists do
   end
 
   def handle_event("create_wishlist", %{"name" => name}, socket) do
+    %{id: user_id} = socket.assigns.current_user
+
     case Wishlist.upsert_wishlist(%WishlistModel{
-           user_id: "b1c0d3fa-5489-4d13-ab2c-7cc2241fe820",
+           user_id: user_id,
            name: name
          }) do
       {:ok, wishlist} ->
@@ -92,7 +97,9 @@ defmodule CadeauCompasWeb.Live.ManageWishlists do
   end
 
   def handle_event("delete_wishlist", %{"wishlist_id" => wishlist_id}, socket) do
-    with {:ok, _} <- Wishlist.delete_wishlist(wishlist_id) do
+    %{id: user_id} = socket.assigns.current_user
+
+    with {:ok, _} <- Wishlist.delete_wishlist(wishlist_id, user_id) do
       updated_wishlists = Enum.reject(socket.assigns.wishlists, &(&1.id == wishlist_id))
       {:noreply, assign(socket, wishlists: updated_wishlists)}
     else

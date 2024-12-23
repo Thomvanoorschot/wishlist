@@ -1,18 +1,12 @@
 <div>
   <aside class="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
     <nav class="flex flex-col items-center gap-4 px-2 sm:py-5">
-      <.link
-        href="#"
-        class="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
-      >
+      <.link href="#" class="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base">
         <.icon name="hero-arrow-path" class="h-4 w-4 transition-all group-hover:scale-110" />
         <span class="sr-only">Acme Inc</span>
       </.link>
       <.tooltip>
-        <.link
-          navigate={~p"/wishlist/manage"}
-          class={nav_link_class(@current_page, :manage_wishlists)}
-        >
+        <.link navigate={~p"/wishlist/manage"} class={nav_link_class(@current_page, :manage_wishlists)}>
           <.icon name="hero-gift" class="h-5 w-5" />
           <span class="sr-only">Wishlists</span>
         </.link>
@@ -21,10 +15,7 @@
     </nav>
     <nav class="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
       <.tooltip>
-        <.link
-          href="#"
-          class="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-        >
+        <.link href="#" class="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8">
           <.icon name="hero-arrow-path" class="h-5 w-5" />
           <span class="sr-only">Settings</span>
         </.link>
@@ -43,57 +34,42 @@
         </.sheet_trigger>
         <.sheet_content id="sheet" side="left" class="sm:max-w-xs">
           <nav class="grid gap-6 text-lg font-medium">
-            <.link
-              href="#"
-              class="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
-            >
+            <.link href="#" class="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base">
               <.icon name="hero-arrow-path" class="h-5 w-5 transition-all group-hover:scale-110" />
               <span class="sr-only">Acme Inc</span>
             </.link>
-            <.link
-              navigate={~p"/wishlist/manage"}
-              class={nav_link_class(@current_page, :manage_wishlists)}
-              class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-            >
+            <.link navigate={~p"/wishlist/manage"} class={nav_link_class(@current_page, :manage_wishlists)} class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground">
               <.icon name="hero-gift" class="h-5 w-5" /> Wishlists
             </.link>
-            <.link
-              href="#"
-              class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-            >
+            <.link href="#" class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground">
               <.icon name="hero-arrow-path" class="h-5 w-5" /> Settings
             </.link>
           </nav>
         </.sheet_content>
       </.sheet>
-      <.breadcrumb class="hidden md:flex">
-        <.breadcrumb_list>
-          <%= for {breadcrumb, index} <- Enum.with_index(@breadcrumbs) do %>
-            <.breadcrumb_item>
-              <.breadcrumb_link>
-                <%= if breadcrumb.link do %>
-                  <.link navigate={breadcrumb.link}><%= breadcrumb.name %></.link>
-                <% else %>
-                  <%= breadcrumb.name %>
-                <% end %>
-              </.breadcrumb_link>
-            </.breadcrumb_item>
-            <%= if index < length(@breadcrumbs) - 1 do %>
-              <.breadcrumb_separator />
+      <%= if assigns[:breadcrumbs] do %>
+        <.breadcrumb class="hidden md:flex">
+          <.breadcrumb_list>
+            <%= for {breadcrumb, index} <- Enum.with_index(@breadcrumbs) do %>
+              <.breadcrumb_item>
+                <.breadcrumb_link>
+                  <%= if breadcrumb.link do %>
+                    <.link navigate={breadcrumb.link}><%= breadcrumb.name %></.link>
+                  <% else %>
+                    <%= breadcrumb.name %>
+                  <% end %>
+                </.breadcrumb_link>
+              </.breadcrumb_item>
+              <%= if index < length(@breadcrumbs) - 1 do %>
+                <.breadcrumb_separator />
+              <% end %>
             <% end %>
-          <% end %>
-        </.breadcrumb_list>
-      </.breadcrumb>
+          </.breadcrumb_list>
+        </.breadcrumb>
+      <% end %>
       <div class="relative ml-auto flex-1 md:grow-0">
-        <.icon
-          name="hero-magnifying-glass"
-          class="absolute left-2.5 top-3 h-4 w-4 text-muted-foreground"
-        />
-        <.input
-          type="text"
-          placeholder="Search..."
-          class="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-        />
+        <.icon name="hero-magnifying-glass" class="absolute left-2.5 top-3 h-4 w-4 text-muted-foreground" />
+        <.input type="text" placeholder="Search..." class="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]" />
       </div>
       <.dropdown_menu>
         <.dropdown_menu_trigger>
@@ -111,7 +87,7 @@
             <.menu_item>Settings</.menu_item>
             <.menu_item>Support</.menu_item>
             <.menu_separator />
-            <.menu_item>Logout</.menu_item>
+            <.menu_item><.link href={~p"/users/log_out"} method="delete" class="w-full h-full">Logout</.link></.menu_item>
           </.menu>
         </.dropdown_menu_content>
       </.dropdown_menu>

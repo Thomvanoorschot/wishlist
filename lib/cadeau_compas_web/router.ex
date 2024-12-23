@@ -17,12 +17,6 @@ defmodule CadeauCompasWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", CadeauCompasWeb do
-    pipe_through :browser
-
-    live "/wishlist/manage", Live.ManageWishlists
-  end
-
   # Other scopes may use custom stacks.
   # scope "/api", CadeauCompasWeb do
   #   pipe_through :api
@@ -52,8 +46,8 @@ defmodule CadeauCompasWeb.Router do
 
     live_session :redirect_if_user_is_authenticated,
       on_mount: [{CadeauCompasWeb.UserAuth, :redirect_if_user_is_authenticated}] do
-      live "/users/register", Live.UserRegistration, :new
-      live "/users/log_in", Live.UserLogin, :new
+      live "/users/register", Live.RegisterLogIn, :register
+      live "/users/log_in", Live.RegisterLogIn, :log_in
       # live "/users/reset_password", UserForgotPasswordLive, :new
       # live "/users/reset_password/:token", UserResetPasswordLive, :edit
     end
@@ -66,6 +60,7 @@ defmodule CadeauCompasWeb.Router do
 
     live_session :require_authenticated_user,
       on_mount: [{CadeauCompasWeb.UserAuth, :ensure_authenticated}] do
+      live "/", Live.ManageWishlists
       # live "/users/settings", UserSettingsLive, :edit
       # live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
     end

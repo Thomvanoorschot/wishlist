@@ -19,14 +19,14 @@ defmodule CadeauCompas.Wishlist do
     end
   end
 
-  def get_with_products() do
-    {_, wishlists_dto} = Q.get_with_products([], into: Queries.WishlistDTO)
+  def get_with_products(user_id) do
+    {_, wishlists_dto} = Q.get_with_products([user_id: user_id], into: Queries.WishlistDTO)
 
     WishlistModel.list_from_dto(wishlists_dto)
   end
 
-  def add_to_wishlist_and_update_query(%WishlistModel{id: wishlist_id, products: wishlist_products} = wishlist, product_id, query) do
-    params = [wishlist_id: wishlist_id, product_id: product_id]
+  def add_to_wishlist_and_update_query(%WishlistModel{id: wishlist_id, products: wishlist_products, user_id: user_id} = wishlist, product_id, query) do
+    params = [wishlist_id: wishlist_id, product_id: product_id, user_id: user_id]
 
     case Q.insert_to_wishlist(params, into: %ProductModel{}) do
       {:ok, inserted_product} ->
@@ -40,12 +40,12 @@ defmodule CadeauCompas.Wishlist do
     end
   end
 
-  def delete_wishlist(wishlist_id) do
-    Q.delete_wishlist(wishlist_id: wishlist_id)
+  def delete_wishlist(wishlist_id, user_id) do
+    Q.delete_wishlist(wishlist_id: wishlist_id, user_id: user_id)
   end
 
-  def delete_product_from_list(%WishlistModel{products: products} = wishlist, product_id) do
-    case Q.delete_product_from_list(wishlist_id: wishlist.id, product_id: product_id) do
+  def delete_product_from_list(%WishlistModel{products: products, user_id: user_id} = wishlist, product_id) do
+    case Q.delete_product_from_list(wishlist_id: wishlist.id, product_id: product_id, user_id: user_id) do
       {:ok, []} ->
         updated_products = Enum.reject(products, &(&1.id == product_id))
         updated_total_cost = Enum.reduce(updated_products, Decimal.new(0), &Decimal.add(&2, &1.price))

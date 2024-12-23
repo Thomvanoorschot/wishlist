@@ -5,6 +5,7 @@ defmodule CadeauCompasWeb.UserAuth do
   import Phoenix.Controller
 
   alias CadeauCompas.Accounts
+  alias CadeauCompas.Accounts.UserSession
 
   # Make the remember me cookie valid for 60 days.
   # If you want bump or reduce this value, also change
@@ -26,39 +27,20 @@ defmodule CadeauCompasWeb.UserAuth do
   if you are not using LiveView.
   """
   def log_in_user(conn, user, params \\ %{}) do
-    token = Accounts.generate_user_session_token(user)
+    token = UserSession.generate_session_token(user)
     user_return_to = get_session(conn, :user_return_to)
 
     conn
     |> renew_session()
     |> put_token_in_session(token)
-    |> maybe_write_remember_me_cookie(token, params)
+    |> remember_me_cookie(token)
     |> redirect(to: user_return_to || signed_in_path(conn))
   end
 
-  defp maybe_write_remember_me_cookie(conn, token, %{"remember_me" => "true"}) do
+  defp remember_me_cookie(conn, token) do
     put_resp_cookie(conn, @remember_me_cookie, token, @remember_me_options)
   end
 
-  defp maybe_write_remember_me_cookie(conn, _token, _params) do
-    conn
-  end
-
-  # This function renews the session ID and erases the whole
-  # session to avoid fixation attacks. If there is any data
-  # in the session you may want to preserve after log in/log out,
-  # you must explicitly fetch the session data before clearing
-  # and then immediately set it after clearing, for example:
-  #
-  #     defp renew_session(conn) do
-  #       preferred_locale = get_session(conn, :preferred_locale)
-  #
-  #       conn
-  #       |> configure_session(renew: true)
-  #       |> clear_session()
-  #       |> put_session(:preferred_locale, preferred_locale)
-  #     end
-  #
   defp renew_session(conn) do
     delete_csrf_token()
 
@@ -74,7 +56,7 @@ defmodule CadeauCompasWeb.UserAuth do
   """
   def log_out_user(conn) do
     user_token = get_session(conn, :user_token)
-    user_token && Accounts.delete_user_session_token(user_token)
+    user_token && UserSession.delete_token(user_token)
 
     if live_socket_id = get_session(conn, :live_socket_id) do
       CadeauCompasWeb.Endpoint.broadcast(live_socket_id, "disconnect", %{})
@@ -92,7 +74,7 @@ defmodule CadeauCompasWeb.UserAuth do
   """
   def fetch_current_user(conn, _opts) do
     {user_token, conn} = ensure_user_token(conn)
-    user = user_token && Accounts.get_user_by_session_token(user_token)
+    user = user_token && UserSession.get_user_by_session_token(user_token)
     assign(conn, :current_user, user)
   end
 
@@ -177,7 +159,7 @@ defmodule CadeauCompasWeb.UserAuth do
   defp mount_current_user(socket, session) do
     Phoenix.Component.assign_new(socket, :current_user, fn ->
       if user_token = session["user_token"] do
-        Accounts.get_user_by_session_token(user_token)
+        UserSession.get_user_by_session_token(user_token)
       end
     end)
   end

@@ -20,7 +20,6 @@ defmodule CadeauCompas.Accounts.Register do
              hashed_password: hashed_password,
              confirmed_at: nil
            ),
-         IO.inspect(user_model),
          deliver_user_confirmation_instructions(user_model, confirmation_url_fun) do
       {:ok}
     else
