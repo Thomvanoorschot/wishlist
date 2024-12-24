@@ -7,10 +7,8 @@ defmodule CadeauCompasWeb.Live.RegisterLogIn do
   def mount(_params, _session, socket) do
     register_changeset = UserModel.registration_changeset(%UserModel{})
     email = Phoenix.Flash.get(socket.assigns.flash, :email)
-    log_in_form = to_form(%{"email" => email}, as: "user_login")
     login_error = Phoenix.Flash.get(socket.assigns.flash, :login_error)
-
-    IO.inspect(login_error)
+    log_in_form = to_form(%{"email" => email}, as: "user_login")
 
     socket =
       socket

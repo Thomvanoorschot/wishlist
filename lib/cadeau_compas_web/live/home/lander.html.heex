@@ -1,0 +1,132 @@
+<div class="flex flex-col min-h-screen">
+  <main class="flex-grow">
+    <section class="bg-gradient-to-r from-red-800 to-purple-900 text-white py-20">
+      <div class="container mx-auto px-4 text-center">
+        <h1 class="text-4xl font-bold mb-4">Share Your Wishes with Loved Ones</h1>
+        <p class="text-xl mb-8">Create private wishlists and share them with your family and friends.</p>
+        <.button size="lg" class="bg-white text-purple-500 hover:bg-gray-100">
+          Create Your Wishlist
+        </.button>
+      </div>
+    </section>
+
+    <section class="py-16">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12">How It Works</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <.card>
+            <.card_header>
+              <.card_title class="flex items-center">
+                <.icon name="hero-gift" class="h-6 w-6 mr-2" /> Create Your Wishlist
+              </.card_title>
+            </.card_header>
+            <.card_content>
+              <p class="text-gray-600">Add items you'd love to receive to your personal wishlist.</p>
+            </.card_content>
+          </.card>
+          <.card>
+            <.card_header>
+              <.card_title class="flex items-center">
+                <.icon name="hero-lock-closed" class="h-6 w-6 mr-2" /> Keep It Private
+              </.card_title>
+            </.card_header>
+            <.card_content>
+              <p class="text-gray-600">Your wishlist is private by default, visible only to you.</p>
+            </.card_content>
+          </.card>
+          <.card>
+            <.card_header>
+              <.card_title class="flex items-center">
+                <.icon name="hero-share" class="h-6 w-6 mr-2" /> Share with Loved Ones
+              </.card_title>
+            </.card_header>
+            <.card_content>
+              <p class="text-gray-600">Choose who to share your wishlist with - family, friends, or both!</p>
+            </.card_content>
+          </.card>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-gray-100 py-16">
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold mb-4">Create Your Private Wishlist</h2>
+        <p class="text-xl mb-8">Start adding items and sharing with your loved ones today!</p>
+        <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+          <.input placeholder="Enter your email" class="max-w-xs" />
+          <.button>Get Started</.button>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-16">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12">Why Choose WishShare?</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="flex flex-col items-center text-center">
+            <.icon name="hero-lock-closed" class="h-12 w-12 text-purple-500 mb-4" />
+            <h3 class="text-xl font-semibold mb-2">Privacy First</h3>
+            <p class="text-gray-600">Your wishlists are private by default. You control who sees what.</p>
+          </div>
+          <div class="flex flex-col items-center text-center">
+            <.icon name="hero-share" class="h-12 w-12 text-purple-500 mb-4" />
+            <h3 class="text-xl font-semibold mb-2">Easy Sharing</h3>
+            <p class="text-gray-600">Share your wishlists with family and friends with just a few clicks.</p>
+          </div>
+          <div class="flex flex-col items-center text-center">
+            <.icon name="hero-gift" class="h-12 w-12 text-purple-500 mb-4" />
+            <h3 class="text-xl font-semibold mb-2">Organize Your Wishes</h3>
+            <p class="text-gray-600">Create multiple wishlists for different occasions or categories.</p>
+          </div>
+          <div class="flex flex-col items-center text-center">
+            <.icon name="hero-user" class="h-12 w-12 text-purple-500 mb-4" />
+            <h3 class="text-xl font-semibold mb-2">Personalized Experience</h3>
+            <p class="text-gray-600">Tailor your wishlists to your unique style and preferences.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-gray-800 text-white py-8">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Company</h3>
+          <ul class="space-y-2">
+            <li><.link href="/about">About Us</.link></li>
+            <li><.link href="/careers">Careers</.link></li>
+            <li><.link href="/press">Press</.link></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Resources</h3>
+          <ul class="space-y-2">
+            <li><.link href="/blog">Blog</.link></li>
+            <li><.link href="/guides">Guides</.link></li>
+            <li><.link href="/help">Help Center</.link></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Legal</h3>
+          <ul class="space-y-2">
+            <li><.link href="/privacy">Privacy Policy</.link></li>
+            <li><.link href="/terms">Terms of Service</.link></li>
+            <li><.link href="/cookies">Cookie Policy</.link></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Connect</h3>
+          <ul class="space-y-2">
+            <li><.link href="https://twitter.com">Twitter</.link></li>
+            <li><.link href="https://facebook.com">Facebook</.link></li>
+            <li><.link href="https://instagram.com">Instagram</.link></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-8 pt-8 border-t border-gray-700 text-center">
+        <p>&copy; 2023 WishShare. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+</div>

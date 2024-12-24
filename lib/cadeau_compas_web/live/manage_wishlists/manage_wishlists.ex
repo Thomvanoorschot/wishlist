@@ -19,7 +19,7 @@ defmodule CadeauCompasWeb.Live.ManageWishlists do
       |> assign(:wishlists, wishlists)
       |> assign(:current_page, :manage_wishlists)
       |> assign(:breadcrumbs, [
-        %{name: "Wishlists", link: ~p"/users/reigster"}
+        %{name: "Wishlists", link: ~p"/wishlist/manage"}
       ])
 
     {:ok, socket}

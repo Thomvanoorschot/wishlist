@@ -39,6 +39,12 @@ defmodule CadeauCompasWeb.Router do
     end
   end
 
+  scope "/", CadeauCompasWeb do
+    pipe_through :browser
+
+    live "/", Live.Lander
+  end
+
   ## Authentication routes
 
   scope "/", CadeauCompasWeb do
@@ -60,7 +66,7 @@ defmodule CadeauCompasWeb.Router do
 
     live_session :require_authenticated_user,
       on_mount: [{CadeauCompasWeb.UserAuth, :ensure_authenticated}] do
-      live "/", Live.ManageWishlists
+      live "/wishlist/manage", Live.ManageWishlists
       # live "/users/settings", UserSettingsLive, :edit
       # live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
     end
