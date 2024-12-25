@@ -67,30 +67,43 @@
           </.breadcrumb_list>
         </.breadcrumb>
       <% end %>
-      <div class="relative ml-auto flex-1 md:grow-0">
-        <.icon name="hero-magnifying-glass" class="absolute left-2.5 top-3 h-4 w-4 text-muted-foreground" />
-        <.input type="text" placeholder="Search..." class="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]" />
-      </div>
-      <.dropdown_menu>
-        <.dropdown_menu_trigger>
-          <.button variant="outline" size="icon" class="overflow-hidden rounded-full">
-            <.avatar>
-              <.avatar_image src="https://github.com/shadcn.png" />
-              <.avatar_fallback class="bg-primary text-white">CN</.avatar_fallback>
-            </.avatar>
+      <%= if assigns[:current_user] do %>
+        <div class="relative ml-auto flex-1 md:grow-0">
+          <.icon name="hero-magnifying-glass" class="absolute left-2.5 top-3 h-4 w-4 text-muted-foreground" />
+          <.input type="text" placeholder="Search..." class="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]" />
+        </div>
+        <.dropdown_menu>
+          <.dropdown_menu_trigger>
+            <.button variant="outline" size="icon" class="overflow-hidden rounded-full">
+              <.avatar>
+                <.avatar_image src="https://github.com/shadcn.png" />
+                <.avatar_fallback class="bg-primary text-white">CN</.avatar_fallback>
+              </.avatar>
+            </.button>
+          </.dropdown_menu_trigger>
+          <.dropdown_menu_content align="end">
+            <.menu>
+              <.menu_label>My Account</.menu_label>
+              <.menu_separator />
+              <.menu_item>Settings</.menu_item>
+              <.menu_item>Support</.menu_item>
+              <.menu_separator />
+              <.menu_item><.link href={~p"/users/log_out"} method="delete" class="w-full h-full">Logout</.link></.menu_item>
+            </.menu>
+          </.dropdown_menu_content>
+        </.dropdown_menu>
+      <% else %>
+        <div class="flex justify-end w-full gap-3">
+          <.button variant="outline">
+            <.link patch={~p"/?modal=log_in"} data-phx-link="patch" data-phx-link-state="push">
+              Log in
+            </.link>
           </.button>
-        </.dropdown_menu_trigger>
-        <.dropdown_menu_content align="end">
-          <.menu>
-            <.menu_label>My Account</.menu_label>
-            <.menu_separator />
-            <.menu_item>Settings</.menu_item>
-            <.menu_item>Support</.menu_item>
-            <.menu_separator />
-            <.menu_item><.link href={~p"/users/log_out"} method="delete" class="w-full h-full">Logout</.link></.menu_item>
-          </.menu>
-        </.dropdown_menu_content>
-      </.dropdown_menu>
+          <.button>
+            Sign up
+          </.button>
+        </div>
+      <% end %>
     </header>
     <main class="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
       <%= @inner_content %>

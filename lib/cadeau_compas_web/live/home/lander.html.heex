@@ -9,7 +9,6 @@
         </.button>
       </div>
     </section>
-
     <section class="py-16">
       <div class="container mx-auto px-4">
         <h2 class="text-3xl font-bold text-center mb-12">How It Works</h2>
@@ -129,4 +128,9 @@
       </div>
     </div>
   </footer>
+</div>
+<div id="log_in_register_dialog_wrapper" phx-hook="OpenModal">
+  <.dialog id="log_in_register_dialog" on_cancel={hide_modal("log_in_register_dialog")} show_close_button={false}>
+    <.live_component module={CadeauCompasWeb.Components.RegisterLogIn} id="register_log_in_component" default_tab={@default_tab} />
+  </.dialog>
 </div>

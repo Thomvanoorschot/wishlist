@@ -27,6 +27,16 @@ import { SearchModalWishlistId } from "./search_modal_wishlist_id";
 let Hooks = {};
 Hooks.SearchModal = SearchModal;
 Hooks.SearchModalWishlistId = SearchModalWishlistId;
+Hooks.OpenModal = {
+  mounted() {
+    this.handleEvent("open_modal", (payload) => {
+      const modalEl = document.getElementById(payload.id);
+      if (modalEl) {
+        liveSocket.execJS(modalEl, modalEl.getAttribute("phx-show-modal"));
+      }
+    });
+  },
+};
 
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")

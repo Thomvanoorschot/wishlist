@@ -7,7 +7,6 @@ defmodule CadeauCompasWeb.Components.SearchModal do
   attr :search_entries, :any, default: []
   slot :entry_slot
 
-  @spec search_modal(map()) :: Phoenix.LiveView.Rendered.t()
   def search_modal(assigns) do
     ~H"""
     <div id="searchbar-dialog" class="hidden fixed inset-0 z-50" role="dialog" aria-modal="true" phx-window-keydown={hide_search_modal()} phx-key="escape">
