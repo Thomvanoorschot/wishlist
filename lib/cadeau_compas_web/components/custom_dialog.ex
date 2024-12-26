@@ -3,6 +3,7 @@ defmodule CadeauCompasWeb.Components.CustomDialog do
   Implement of Dialog components from https://ui.shadcn.com/docs/components/dialog
   """
   use SaladUI, :component
+  use CadeauCompasWeb, :live_component
 
   @doc """
   Dialog component
@@ -43,6 +44,7 @@ defmodule CadeauCompasWeb.Components.CustomDialog do
   attr :class, :string, default: nil
   slot :inner_block, required: true
   attr :show_close_button, :boolean, default: true
+  attr :navigate_on_close, :string, default: nil
 
   def dialog(assigns) do
     ~H"""
@@ -62,9 +64,9 @@ defmodule CadeauCompasWeb.Components.CustomDialog do
       <div class="fixed inset-0 flex items-center justify-center overflow-y-auto" role="dialog" aria-modal="true" tabindex="0">
         <.focus_wrap
           id={"#{@id}-wrap"}
-          phx-window-keydown={JS.exec("phx-hide-modal", to: "##{@id}")}
+          phx-window-keydown={JS.exec("phx-hide-modal", to: "##{@id}") |> JS.dispatch("click", to: "##{@id}_close_anchor")}
           phx-key="escape"
-          phx-click-away={JS.exec("phx-hide-modal", to: "##{@id}")}
+          phx-click-away={JS.exec("phx-hide-modal", to: "##{@id}") |> JS.dispatch("click", to: "##{@id}_close_anchor")}
           class="w-full sm:max-w-[425px]"
         >
           <div
@@ -79,6 +81,7 @@ defmodule CadeauCompasWeb.Components.CustomDialog do
             }
           >
             <%= render_slot(@inner_block) %>
+            <.link :if={@navigate_on_close} id={"#{@id}_close_anchor"} class="hidden" patch={@navigate_on_close}></.link>
 
             <button
               :if={@show_close_button}

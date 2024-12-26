@@ -94,14 +94,16 @@
         </.dropdown_menu>
       <% else %>
         <div class="flex justify-end w-full gap-3">
-          <.button variant="outline">
-            <.link patch={~p"/?modal=log_in"} data-phx-link="patch" data-phx-link-state="push">
+          <.link class="w-max h-full" patch={~p"/?modal=log_in"} data-phx-link="patch" data-phx-link-state="push">
+            <.button variant="outline">
               Log in
-            </.link>
-          </.button>
-          <.button>
-            Sign up
-          </.button>
+            </.button>
+          </.link>
+          <.link class="w-max h-full" patch={~p"/?modal=register"} data-phx-link="patch" data-phx-link-state="push">
+            <.button>
+              Sign up
+            </.button>
+          </.link>
         </div>
       <% end %>
     </header>

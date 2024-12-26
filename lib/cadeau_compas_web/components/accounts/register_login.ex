@@ -3,11 +3,12 @@ defmodule CadeauCompasWeb.Components.RegisterLogIn do
   use CadeauCompasWeb, :verified_routes
 
   import SaladUI.{Form, Input, Button, Tabs, Card}
+
   alias CadeauCompas.Accounts.Register
   alias CadeauCompas.Accounts.Models.UserModel
 
   @impl true
-  def update(assigns, socket) do
+  def update(%{default_tab: default_tab} = assigns, socket) do
     register_changeset = UserModel.registration_changeset(%UserModel{})
     email = Map.get(assigns, :email)
     login_error = Map.get(assigns, :login_error)
@@ -16,7 +17,7 @@ defmodule CadeauCompasWeb.Components.RegisterLogIn do
     socket =
       socket
       |> assign(assigns)
-      |> assign(:default_tab, assigns[:default_tab] || "log_in")
+      |> assign(:default_tab, default_tab)
       |> assign(:trigger_submit, false)
       |> assign(:check_errors, false)
       |> assign(:login_error, login_error)
@@ -61,12 +62,12 @@ defmodule CadeauCompasWeb.Components.RegisterLogIn do
   def render(assigns) do
     ~H"""
     <div class={@class}>
-      <.tabs :let={builder} default={@default_tab} id="tab-single-tab">
+      <.tabs :let={builder} default={@default_tab} id={"tab-single-tab-#{@default_tab}"}>
         <.tabs_list class="grid w-full grid-cols-2">
-          <.tabs_trigger builder={builder} value="log_in">Log in</.tabs_trigger>
-          <.tabs_trigger builder={builder} value="register">Sign up</.tabs_trigger>
+          <.tabs_trigger id="log_in_tab" builder={builder} value="log_in">Log in</.tabs_trigger>
+          <.tabs_trigger id="register_tab" builder={builder} value="register">Sign up</.tabs_trigger>
         </.tabs_list>
-        <.tabs_content value="log_in" class={@default_tab == :register && "hidden"}>
+        <.tabs_content value="log_in" class={if(@default_tab != "log_in", do: "hidden", else: "")}>
           <.card>
             <.card_header>
               <.card_title>Log in to account</.card_title>
@@ -107,7 +108,7 @@ defmodule CadeauCompasWeb.Components.RegisterLogIn do
             </.card_content>
           </.card>
         </.tabs_content>
-        <.tabs_content value="register" class={@default_tab == :log_in && "hidden"}>
+        <.tabs_content value="register" class={if(@default_tab != "register", do: "hidden", else: "")}>
           <.card>
             <.card_header>
               <.card_title>Register for an account</.card_title>

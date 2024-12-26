@@ -1453,13 +1453,13 @@ select {
   width: 100%;
 }
 
-.w-screen {
-  width: 100vw;
+.w-max {
+  width: -moz-max-content;
+  width: max-content;
 }
 
-.w-min {
-  width: -moz-min-content;
-  width: min-content;
+.w-screen {
+  width: 100vw;
 }
 
 .min-w-\[8rem\] {
@@ -1480,11 +1480,6 @@ select {
 
 .max-w-xs {
   max-width: 20rem;
-}
-
-.max-w-fit {
-  max-width: -moz-fit-content;
-  max-width: fit-content;
 }
 
 .flex-1 {
@@ -3089,10 +3084,6 @@ body {
 
   .sm\:max-w-xs {
     max-width: 20rem;
-  }
-
-  .sm\:max-w-\[200px\] {
-    max-width: 200px;
   }
 
   .sm\:flex-row {

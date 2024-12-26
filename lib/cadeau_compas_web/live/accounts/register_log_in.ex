@@ -4,7 +4,7 @@ defmodule CadeauCompasWeb.Live.RegisterLogIn do
   def mount(_params, _session, socket) do
     socket =
       socket
-      |> assign(default_tab: socket.assigns.live_action || "log_in")
+      |> assign(default_tab: to_string(socket.assigns.live_action || :log_in))
       |> assign(:current_page, :register_user)
 
     {:ok, socket}

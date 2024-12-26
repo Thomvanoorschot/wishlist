@@ -3,11 +3,10 @@ defmodule CadeauCompasWeb.Live.Lander do
 
   import SaladUI.{Button, Card, Input}
   import CadeauCompasWeb.Components.CustomDialog
-  
+
   def mount(params, _session, socket) do
     socket =
       socket
-      |> assign(:default_tab, :log_in)
       |> assign(:current_page, :lander)
 
     {:ok, socket}
@@ -22,7 +21,7 @@ defmodule CadeauCompasWeb.Live.Lander do
           id: "log_in_register_dialog"
         })
 
-      {:noreply, assign(socket, default_tab: String.to_atom(default_modal?))}
+      {:noreply, assign(socket, default_tab: default_modal?)}
     else
       {:noreply, socket}
     end

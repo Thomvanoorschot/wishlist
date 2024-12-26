@@ -42,7 +42,10 @@ defmodule CadeauCompasWeb.Router do
   scope "/", CadeauCompasWeb do
     pipe_through :browser
 
-    live "/", Live.Lander
+    live_session :maybe_user,
+      on_mount: [{CadeauCompasWeb.UserAuth, :mount_current_user}] do
+      live "/", Live.Lander
+    end
   end
 
   ## Authentication routes
