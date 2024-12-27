@@ -4,6 +4,7 @@ defmodule CadeauCompas.Accounts.Models.UserModel do
   defstruct [
     :id,
     :email,
+    :username,
     :password,
     :hashed_password,
     :current_password,
@@ -11,9 +12,10 @@ defmodule CadeauCompas.Accounts.Models.UserModel do
   ]
 
   def registration_changeset(user, attrs \\ %{}) do
-    {user, %{id: :binary_id, email: :string, password: :string, hashed_password: :string}}
-    |> cast(attrs, [:email, :password])
+    {user, %{id: :binary_id, email: :string, username: :string, password: :string, hashed_password: :string}}
+    |> cast(attrs, [:email, :password, :username])
     |> validate_email()
+    |> validate_username()
     |> validate_password()
   end
 
@@ -22,6 +24,14 @@ defmodule CadeauCompas.Accounts.Models.UserModel do
     |> validate_required([:email])
     |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/, message: "must have the @ sign and no spaces")
     |> validate_length(:email, max: 160)
+  end
+
+  defp validate_username(changeset) do
+    changeset
+    |> validate_required([:username])
+    |> validate_format(:username, ~r/^[a-zA-Z0-9]*$/, message: "can only have letters and numbers")
+    |> validate_length(:username, min: 4)
+    |> validate_length(:username, max: 32)
   end
 
   defp validate_password(changeset) do

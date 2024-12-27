@@ -8,7 +8,7 @@ store_id = Ecto.UUID.generate()
 
 # Insert the store using AyeSQL
 store_name = "SuperMart"
-Store.Queries.insert_store(id: store_id, name: store_name)
+Store.Queries.Q.insert_store(id: store_id, name: store_name)
 
 # Define product categories
 categories = [
@@ -33,7 +33,7 @@ for _ <- 1..100 do
   description = Faker.Lorem.sentence()
 
   # Insert product using AyeSQL
-  Product.Queries.insert_product(
+  Product.Queries.Q.insert_product(
     id: product_id,
     name: product_name,
     price: price,
@@ -42,7 +42,7 @@ for _ <- 1..100 do
   )
 
   # Associate product with store
-  Store.Queries.add_product_to_store(
+  Store.Queries.Q.add_product_to_store(
     product_id: product_id,
     store_id: store_id
   )

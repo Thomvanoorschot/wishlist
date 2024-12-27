@@ -3,6 +3,7 @@
 SELECT
     id :: text,
     email,
+    username,
     hashed_password,
     confirmed_at,
     inserted_at,
@@ -16,6 +17,7 @@ WHERE
 SELECT
     id :: text,
     email,
+    username,
     hashed_password,
     confirmed_at,
     inserted_at,
@@ -30,6 +32,7 @@ INSERT INTO
     users (
         id,
         email,
+        username,
         hashed_password,
         confirmed_at,
         inserted_at,
@@ -39,6 +42,7 @@ VALUES
     (
         :id :: text :: uuid,
         :email,
+        :username,
         :hashed_password,
         :confirmed_at,
         now(),
@@ -87,6 +91,7 @@ VALUES
 SELECT
     u.id :: text,
     u.email,
+    u.username,
     u.confirmed_at
 FROM
     users_tokens AS t

@@ -30,6 +30,7 @@ defmodule CadeauCompasWeb.Components.RegisterLogIn do
 
   @impl true
   def handle_event("register", %{"user_register" => user_params}, socket) do
+    IO.inspect(user_params)
     case Register.register_user(user_params, &url(~p"/users/confirm/#{&1}")) do
       {:ok} ->
         {:noreply, socket |> assign(trigger_submit: true)}
@@ -133,6 +134,13 @@ defmodule CadeauCompasWeb.Components.RegisterLogIn do
                 action={~p"/users/log_in?_action=registered"}
               >
                 <.form_item>
+                  <.form_label>Username</.form_label>
+                  <.form_control>
+                    <.input field={@register_form[:username]} type="text" placeholder="MyUserName" required phx-debounce="500" />
+                  </.form_control>
+                  <.form_message :if={@check_errors} field={@register_form[:username]} />
+                </.form_item>
+                <.form_item>
                   <.form_label>Email</.form_label>
                   <.form_control>
                     <.input field={@register_form[:email]} type="email" placeholder="myaccount@email.com" required phx-debounce="500" />
@@ -144,6 +152,7 @@ defmodule CadeauCompasWeb.Components.RegisterLogIn do
                     <.form_label>Password</.form_label>
                     <.input field={@register_form[:password]} type="password" placeholder="Password" required />
                   </.form_control>
+                  <.form_message :if={@check_errors} field={@register_form[:password]} />
                 </.form_item>
 
                 <div class="mt-2 flex items-center justify-between gap-6">

@@ -38,9 +38,12 @@ defmodule CadeauCompas.Repo.Migrations.Initial do
       add :id, :binary_id, primary_key: true
       add :user_id, :binary_id, null: false
       add :name, :string, null: false
+      add :slug, :string, null: false
 
       timestamps(type: :timestamptz)
     end
+
+    create unique_index(:wishlists, [:user_id, :slug])
 
     create table(:wishlist_products, primary_key: false) do
       add :wishlist_id,

@@ -11,19 +11,29 @@ defmodule CadeauCompas.Accounts.Register do
       |> UserModel.registration_changeset(attrs)
       |> UserModel.hash_password()
       |> UserModel.generate_id()
+      |> update_change(:username, &String.downcase/1)
 
-    with {:ok, %UserModel{id: id, email: email, hashed_password: hashed_password} = user_model} <- apply_action(changeset, :update),
+    with {:ok, %UserModel{id: id, email: email, username: username, hashed_password: hashed_password} = user_model} <- apply_action(changeset, :update),
          {:ok, _} <-
            Q.insert_user(
              id: id,
              email: email,
+             username: username,
              hashed_password: hashed_password,
              confirmed_at: nil
            ),
          deliver_user_confirmation_instructions(user_model, confirmation_url_fun) do
       {:ok}
     else
-      {:error, %Postgrex.Error{postgres: %{code: :unique_violation}}} ->
+      {:error, %Postgrex.Error{postgres: %{code: :unique_violation, constraint: "users_username_index"}}} ->
+        changeset
+        |> add_error(
+          :username,
+          "This username already exists."
+        )
+        |> apply_action(:validate)
+
+      {:error, %Postgrex.Error{postgres: %{code: :unique_violation, constraint: "users_email_index"}}} ->
         changeset
         |> add_error(
           :email,

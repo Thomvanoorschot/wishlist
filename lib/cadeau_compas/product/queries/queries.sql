@@ -17,7 +17,7 @@ ORDER BY
 LIMIT
     5;
 
--- name: wishlist
+-- name: insert_product
 INSERT INTO
     products (
         id,

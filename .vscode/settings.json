@@ -3,5 +3,6 @@
   "[elixir]": {
     "editor.wordWrap": "off",
     "editor.wordWrapColumn": 0
-  }
+  },
+  "elixirLS.suggestSpecs": false
 }

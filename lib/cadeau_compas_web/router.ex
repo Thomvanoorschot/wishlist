@@ -45,6 +45,7 @@ defmodule CadeauCompasWeb.Router do
     live_session :maybe_user,
       on_mount: [{CadeauCompasWeb.UserAuth, :mount_current_user}] do
       live "/", Live.Lander
+      live "/wishlist/:username/:wishlist_name", Live.WishlistDetail
     end
   end
 
