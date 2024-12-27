@@ -84,7 +84,7 @@
               </div>
               <%= if @delete_products_enabled do %>
                 <div phx-click="delete_product_from_list" phx-value-wishlist_id={wishlist.id} phx-value-product_id={product.id} class="ml-auto">
-                  <.icon name="hero-minus-circle-solid" class="7 bg-destructive" />
+                  <.icon name="hero-minus-circle-solid" class="7 bg-destructive hover:opacity-60" />
                 </div>
               <% end %>
             </div>

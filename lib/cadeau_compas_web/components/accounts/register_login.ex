@@ -6,6 +6,7 @@ defmodule CadeauCompasWeb.Components.RegisterLogIn do
 
   alias CadeauCompas.Accounts.Register
   alias CadeauCompas.Accounts.Models.UserModel
+  alias Phoenix.LiveView.JS
 
   @impl true
   def update(%{default_tab: default_tab} = assigns, socket) do
@@ -67,16 +68,16 @@ defmodule CadeauCompasWeb.Components.RegisterLogIn do
           <.tabs_trigger id="log_in_tab" builder={builder} value="log_in">Log in</.tabs_trigger>
           <.tabs_trigger id="register_tab" builder={builder} value="register">Sign up</.tabs_trigger>
         </.tabs_list>
-        <.tabs_content value="log_in" class={if(@default_tab != "log_in", do: "hidden", else: "")}>
+        <.tabs_content value="log_in" class={if(@default_tab != "log_in", do: "hidden ", else: "")}>
           <.card>
             <.card_header>
               <.card_title>Log in to account</.card_title>
               <.card_description>
                 Don't have an account?
-                <.link navigate={~p"/users/register"} class="font-semibold text-brand hover:underline">
+                <.link phx-click={JS.dispatch("click", to: "#register_tab")} class="font-semibold text-brand hover:underline">
                   Sign up
                 </.link>
-                for an account now.
+                for an account.
               </.card_description>
             </.card_header>
             <.card_content class="space-y-2">
@@ -89,19 +90,19 @@ defmodule CadeauCompasWeb.Components.RegisterLogIn do
                 </.form_item>
                 <.form_item>
                   <.form_control>
-                    <div class="flex justify-between">
-                      <.form_label>Password</.form_label>
+                    <.form_label class="flex items-center justify-between h-6">
+                      Password
                       <.link tabindex="-1" href={~p"/users/reset_password"} class="text-sm font-medium hover:underline leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                         Forgot your password?
                       </.link>
-                    </div>
+                    </.form_label>
                     <.input field={@log_in_form[:password]} type="password" placeholder="Password" required />
                     <.form_message :if={@login_error} errors={[@login_error]} />
                   </.form_control>
                 </.form_item>
                 <div class="mt-2 flex items-center justify-between gap-6">
                   <.button phx-disable-with="Logging in..." class="w-full">
-                    Log in <span aria-hidden="true">→</span>
+                    Log in
                   </.button>
                 </div>
               </.form>
@@ -114,7 +115,7 @@ defmodule CadeauCompasWeb.Components.RegisterLogIn do
               <.card_title>Register for an account</.card_title>
               <.card_description>
                 Already registered?
-                <.link navigate={~p"/users/log_in"} class="font-semibold text-brand hover:underline">
+                <.link phx-click={JS.dispatch("click", to: "#log_in_tab")} class="font-semibold text-brand hover:underline">
                   Log in
                 </.link>
                 to your account now.
