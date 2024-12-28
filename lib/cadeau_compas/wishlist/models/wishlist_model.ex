@@ -1,7 +1,7 @@
 defmodule CadeauCompas.Wishlist.Models.WishlistModel do
   alias CadeauCompas.Product.Models.ProductModel
 
-  defstruct [:id, :user_id, :name, :total_cost, :inserted_at, products: []]
+  defstruct [:id, :user_id, :name, :slug, :total_cost, :inserted_at, products: []]
 
   def list_from_dto(dto) do
     dto
@@ -25,6 +25,7 @@ defmodule CadeauCompas.Wishlist.Models.WishlistModel do
         id: first_item.id,
         user_id: first_item.user_id,
         name: first_item.name,
+        slug: first_item.slug,
         inserted_at: first_item.inserted_at,
         total_cost: first_item.total_cost,
         products: products

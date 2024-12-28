@@ -1,9 +1,13 @@
 defmodule CadeauCompasWeb.Live.WishlistDetail do
   use CadeauCompasWeb, :live_view
 
-  def mount(%{"username" => username, "wishlist_name" => wishlist_name}, _session, socket) do
+  alias CadeauCompas.Wishlist
+
+  def mount(%{"username" => username, "wishlist_slug" => slug}, _session, socket) do
     %{id: user_id} = socket.assigns.current_user
-    # wishlists = Wishlist.get_with_products(user_id)
+    wishlists = Wishlist.get_detail_with_products(username, slug)
+
+    IO.inspect(wishlists)
 
     socket =
       socket

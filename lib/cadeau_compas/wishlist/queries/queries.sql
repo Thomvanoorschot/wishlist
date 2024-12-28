@@ -1,12 +1,13 @@
 -- file: queries.sql
 -- name: upsert_wishlist
 INSERT INTO
-  wishlists (id, user_id, name, inserted_at, updated_at)
+  wishlists (id, user_id, name, slug, inserted_at, updated_at)
 VALUES
   (
     :id :: text :: uuid,
     :user_id :: text :: uuid,
     :name,
+    :slug,
     now(),
     now()
   ) ON CONFLICT (id) DO
@@ -19,6 +20,7 @@ SELECT
   W.id :: text,
   W.user_id :: text,
   W.name,
+  W.slug,
   W.inserted_at,
   SUM(P.price) OVER (PARTITION BY W.id) AS total_cost,
   P.id :: text AS product_id,
@@ -86,3 +88,27 @@ WHERE
       w.id = :wishlist_id :: text :: uuid
       AND w.user_id = :user_id :: text :: uuid
   );
+
+-- name: get_detail_by_slug_with_products
+SELECT
+  W.id :: text,
+  W.user_id :: text,
+  W.name,
+  W.slug,
+  W.inserted_at,
+  SUM(P.price) OVER (PARTITION BY W.id) AS total_cost,
+  P.id :: text AS product_id,
+  P.name AS product_name,
+  P.category AS product_category,
+  P.price AS product_price
+FROM
+  wishlists W
+  INNER JOIN users U ON U.id = W.user_id
+  LEFT JOIN wishlist_products WP ON WP.wishlist_id = W.id
+  LEFT JOIN products P ON P.id = WP.product_id
+WHERE
+  U.username = :username
+  AND W.slug = :slug
+ORDER BY
+  W.inserted_at DESC,
+  WP.inserted_at DESC;

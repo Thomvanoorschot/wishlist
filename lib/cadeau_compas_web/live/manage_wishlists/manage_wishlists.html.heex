@@ -9,7 +9,7 @@
     <.card_description>You can add several products to your wishlist</.card_description>
   </.card_header>
   <.card_content>
-    <.form :let={f} for={%{}} class="w-2/3 space-y-6" phx-submit="create_wishlist" autocomplete="off">
+    <.form :let={f} for={@create_form} class="w-2/3 space-y-6" phx-submit="create_wishlist" autocomplete="off">
       <% f = %{f | data: %{name: ""}} %>
       <.form_item>
         <.form_label error={not Enum.empty?(f[:name].errors)}>

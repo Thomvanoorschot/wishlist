@@ -9,11 +9,9 @@ defmodule CadeauCompasWeb.Components.RegisterLogIn do
   alias Phoenix.LiveView.JS
 
   @impl true
-  def update(%{default_tab: default_tab} = assigns, socket) do
+  def update(%{default_tab: default_tab, email: email?, login_error: login_error?} = assigns, socket) do
     register_changeset = UserModel.registration_changeset(%UserModel{})
-    email = Map.get(assigns, :email)
-    login_error = Map.get(assigns, :login_error)
-    log_in_form = to_form(%{"email" => email}, as: "user_login")
+    log_in_form = to_form(%{"email" => email?}, as: "user_login")
 
     socket =
       socket
@@ -21,7 +19,7 @@ defmodule CadeauCompasWeb.Components.RegisterLogIn do
       |> assign(:default_tab, default_tab)
       |> assign(:trigger_submit, false)
       |> assign(:check_errors, false)
-      |> assign(:login_error, login_error)
+      |> assign(:login_error, login_error?)
       |> assign_register_form(register_changeset)
       |> assign(:log_in_form, log_in_form)
 
@@ -30,7 +28,6 @@ defmodule CadeauCompasWeb.Components.RegisterLogIn do
 
   @impl true
   def handle_event("register", %{"user_register" => user_params}, socket) do
-    IO.inspect(user_params)
     case Register.register_user(user_params, &url(~p"/users/confirm/#{&1}")) do
       {:ok} ->
         {:noreply, socket |> assign(trigger_submit: true)}

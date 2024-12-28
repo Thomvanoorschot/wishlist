@@ -14,6 +14,7 @@ defmodule CadeauCompasWeb.Live.ManageWishlists do
 
     socket =
       socket
+      |> assign(:create_form, nil)
       |> assign(:delete_products_enabled, false)
       |> assign(:search_entries, [])
       |> assign(:wishlists, wishlists)

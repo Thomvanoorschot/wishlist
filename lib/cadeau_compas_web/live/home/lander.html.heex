@@ -133,6 +133,6 @@
 </div>
 <div id="log_in_register_dialog_wrapper" phx-hook="OpenModal">
   <.dialog :if={assigns[:default_tab]} id="log_in_register_dialog" navigate_on_close={~p"/"} on_cancel={hide_modal("log_in_register_dialog")} show_close_button={false}>
-    <.live_component phx-update="replace" module={CadeauCompasWeb.Components.RegisterLogIn} id={"register_log_in_component-#{@default_tab}"} default_tab={@default_tab} />
+    <.live_component phx-update="replace" module={CadeauCompasWeb.Components.RegisterLogIn} id={"register_log_in_component-#{@default_tab}"} default_tab={@default_tab} email="" login_error={nil} />
   </.dialog>
 </div>

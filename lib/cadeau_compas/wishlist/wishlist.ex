@@ -1,4 +1,5 @@
 defmodule CadeauCompas.Wishlist do
+  import CadeauCompas.Helpers.StringHelpers
   alias CadeauCompas.Wishlist.Queries
   alias CadeauCompas.Wishlist.Queries.Q
   alias CadeauCompas.Wishlist.Models.WishlistModel
@@ -10,7 +11,7 @@ defmodule CadeauCompas.Wishlist do
   end
 
   def upsert_wishlist(%WishlistModel{id: id, user_id: user_id, name: name} = wishlist) do
-    case Q.upsert_wishlist(id: id, user_id: user_id, name: name) do
+    case Q.upsert_wishlist(id: id, user_id: user_id, name: name, slug: slugify(name)) do
       {:ok, [%{id: wishlist_id}]} ->
         {:ok, %{wishlist | id: wishlist_id}}
 
@@ -20,7 +21,7 @@ defmodule CadeauCompas.Wishlist do
   end
 
   def get_with_products(user_id) do
-    {_, wishlists_dto} = Q.get_with_products([user_id: user_id], into: Queries.WishlistDTO)
+    {_, wishlists_dto} = Q.get_with_products([user_id: user_id], into: %Queries.WishlistDTO{})
 
     WishlistModel.list_from_dto(wishlists_dto)
   end
@@ -54,5 +55,11 @@ defmodule CadeauCompas.Wishlist do
       {:error, []} ->
         {:error, wishlist}
     end
+  end
+
+  def get_detail_with_products(username, slug) do
+    {_, wishlist_dto} = Q.get_detail_by_slug_with_products([username: username, slug: slug], into: Queries.WishlistDTO)
+
+    Enum.at(WishlistModel.list_from_dto(wishlist_dto), 0)
   end
 end
