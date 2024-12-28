@@ -19,5 +19,5 @@ defmodule CadeauCompasWeb.Layouts do
   """
   use CadeauCompasWeb, :html
 
-  embed_templates "layouts/*"
+  embed_templates "/*"
 end
