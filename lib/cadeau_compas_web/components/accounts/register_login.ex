@@ -16,12 +16,14 @@ defmodule CadeauCompasWeb.Components.RegisterLogIn do
     socket =
       socket
       |> assign(assigns)
-      |> assign(:default_tab, default_tab)
-      |> assign(:trigger_submit, false)
-      |> assign(:check_errors, false)
-      |> assign(:login_error, login_error?)
+      |> assign(%{
+        default_tab: default_tab,
+        trigger_submit: false,
+        check_errors: false,
+        login_error: login_error?,
+        log_in_form: log_in_form
+      })
       |> assign_register_form(register_changeset)
-      |> assign(:log_in_form, log_in_form)
 
     {:ok, socket}
   end

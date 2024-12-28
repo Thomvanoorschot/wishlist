@@ -5,8 +5,8 @@ defmodule CadeauCompasWeb.Live.ManageWishlists do
   alias CadeauCompas.Product
   alias CadeauCompas.Wishlist
 
-  import CadeauCompasWeb.Components.SearchModal
-  import SaladUI.{Button, Card, Accordion, Input, Form, DropdownMenu, Menu, Dialog}
+  import CadeauCompasWeb.Components.{WishlistList, SearchModal}
+  import SaladUI.{Button, Card, Input, Form, Dialog}
 
   def mount(_params, _session, socket) do
     %{id: user_id} = socket.assigns.current_user
