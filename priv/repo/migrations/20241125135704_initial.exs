@@ -39,6 +39,9 @@ defmodule CadeauCompas.Repo.Migrations.Initial do
       add :user_id, :binary_id, null: false
       add :name, :string, null: false
       add :slug, :string, null: false
+      add :accessibility, :string, default: "noone"
+      add :secret_question, :string
+      add :secret_answer, :string
 
       timestamps(type: :timestamptz)
     end
@@ -54,9 +57,23 @@ defmodule CadeauCompas.Repo.Migrations.Initial do
           references(:products, type: :binary_id, on_delete: :delete_all),
           null: false
 
+      add :checked_off_by, :string
+
       timestamps(type: :timestamptz)
     end
 
     create unique_index(:wishlist_products, [:wishlist_id, :product_id])
+
+    create table(:wishlist_access, primary_key: false) do
+      add :wishlist_id,
+          references(:wishlists, type: :binary_id, on_delete: :delete_all),
+          null: false
+
+      add :user_id, :string, null: false
+
+      timestamps(type: :timestamptz)
+    end
+
+    create unique_index(:wishlist_access, [:wishlist_id, :user_id])
   end
 end

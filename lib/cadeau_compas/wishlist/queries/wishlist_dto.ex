@@ -11,6 +11,10 @@ defmodule CadeauCompas.Wishlist.Queries.WishlistDTO do
     :product_id,
     :product_name,
     :product_category,
-    :product_price
+    :product_price,
+    :accessibility,
+    :user_has_access,
+    :secret_question,
+    :is_checked_off
   ]
 end

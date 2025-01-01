@@ -23,6 +23,7 @@ import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
 import { SearchModal } from "./search_modal";
 import { SearchModalWishlistId } from "./search_modal_wishlist_id";
+import { createLiveToastHook } from "../../deps/live_toast";
 
 let Hooks = {};
 Hooks.SearchModal = SearchModal;
@@ -37,6 +38,7 @@ Hooks.OpenModal = {
     });
   },
 };
+Hooks.LiveToast = createLiveToastHook();
 
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")

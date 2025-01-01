@@ -1,7 +1,35 @@
 defmodule CadeauCompas.Wishlist.Models.WishlistModel do
   alias CadeauCompas.Product.Models.ProductModel
 
-  defstruct [:id, :user_id, :name, :slug, :total_cost, :inserted_at, products: []]
+  defstruct [:id, :user_id, :name, :slug, :total_cost, :secret_question, :inserted_at, products: []]
+
+  def from_dto(dto) do
+    dto
+    |> Enum.reduce(nil, fn item, acc ->
+      acc =
+        acc ||
+          %__MODULE__{
+            id: item.id,
+            user_id: item.user_id,
+            name: item.name,
+            slug: item.slug,
+            inserted_at: item.inserted_at,
+            total_cost: item.total_cost,
+            secret_question: item.secret_question,
+            products: []
+          }
+
+      product = %ProductModel{
+        id: item.product_id,
+        name: item.product_name,
+        category: item.product_category,
+        price: item.product_price,
+        is_checked_off: item.is_checked_off
+      }
+
+      %{acc | products: [product | acc.products]}
+    end)
+  end
 
   def list_from_dto(dto) do
     dto
@@ -17,7 +45,8 @@ defmodule CadeauCompas.Wishlist.Models.WishlistModel do
             id: item.product_id,
             name: item.product_name,
             category: item.product_category,
-            price: item.product_price
+            price: item.product_price,
+            is_checked_off: item.is_checked_off
           }
         end)
 

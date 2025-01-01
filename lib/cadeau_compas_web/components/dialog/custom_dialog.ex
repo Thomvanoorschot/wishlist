@@ -45,6 +45,7 @@ defmodule CadeauCompasWeb.Components.CustomDialog do
   slot :inner_block, required: true
   attr :show_close_button, :boolean, default: true
   attr :navigate_on_close, :string, default: nil
+  attr :focus_wrap, :boolean, default: true
 
   def dialog(assigns) do
     ~H"""
@@ -62,42 +63,64 @@ defmodule CadeauCompasWeb.Components.CustomDialog do
         aria-hidden="true"
       />
       <div class="fixed inset-0 flex items-center justify-center overflow-y-auto" role="dialog" aria-modal="true" tabindex="0">
-        <.focus_wrap
-          id={"#{@id}-wrap"}
-          phx-window-keydown={JS.exec("phx-hide-modal", to: "##{@id}") |> JS.dispatch("click", to: "##{@id}_close_anchor")}
-          phx-key="escape"
-          phx-click-away={JS.exec("phx-hide-modal", to: "##{@id}") |> JS.dispatch("click", to: "##{@id}_close_anchor")}
-          class="w-full sm:max-w-[425px]"
-        >
-          <div
-            role="dialog"
-            aria-modal="true"
-            tabindex="0"
-            class={
-              classes([
-                "z-50 grid w-full max-w-lg gap-4 border bg-background p-6 shadow-lg duration-200 group-data-[state=open]/dialog:animate-in group-data-[state=closed]/dialog:animate-out group-data-[state=closed]/dialog:fade-out-0 group-data-[state=open]/dialog:fade-in-0 group-data-[state=closed]/dialog:zoom-out-95 group-data-[state=open]/dialog:zoom-in-95 group-data-[state=closed]/dialog:slide-out-to-left-1/2 group-data-[state=closed]/dialog:slide-out-to-top-[48%] group-data-[state=open]/dialog:slide-in-from-left-1/2 group-data-[state=open]/dialog:slide-in-from-top-[48%] sm:rounded-lg",
-                @class
-              ])
-            }
+        <%= if @focus_wrap do %>
+          <.focus_wrap
+            id={"#{@id}-wrap"}
+            phx-window-keydown={JS.exec("phx-hide-modal", to: "##{@id}") |> JS.dispatch("click", to: "##{@id}_close_anchor")}
+            phx-key="escape"
+            phx-click-away={JS.exec("phx-hide-modal", to: "##{@id}") |> JS.dispatch("click", to: "##{@id}_close_anchor")}
+            class=""
           >
-            <%= render_slot(@inner_block) %>
-            <.link :if={@navigate_on_close} id={"#{@id}_close_anchor"} class="hidden" patch={@navigate_on_close}></.link>
-
-            <button
-              :if={@show_close_button}
-              type="button"
-              class="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none group-data-[state=open]/dialog:bg-accent group-data-[state=open]/dialog:text-muted-foreground"
-              phx-click={JS.exec("phx-hide-modal", to: "##{@id}")}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                <path d="M18 6 6 18"></path>
-                <path d="m6 6 12 12"></path>
-              </svg>
-              <span class="sr-only">Close</span>
-            </button>
+            <.dialog_content id={@id} class={@class} show_close_button={@show_close_button} navigate_on_close={@navigate_on_close}>
+              <%= render_slot(@inner_block) %>
+            </.dialog_content>
+          </.focus_wrap>
+        <% else %>
+          <div class="">
+            <.dialog_content id={@id} class={@class} show_close_button={@show_close_button} navigate_on_close={@navigate_on_close}>
+              <%= render_slot(@inner_block) %>
+            </.dialog_content>
           </div>
-        </.focus_wrap>
+        <% end %>
       </div>
+    </div>
+    """
+  end
+
+  attr :id, :string, required: true
+  attr :class, :string, default: nil
+  slot :inner_block, required: true
+  attr :show_close_button, :boolean, default: true
+  attr :navigate_on_close, :string, default: nil
+
+  def dialog_content(assigns) do
+    ~H"""
+    <div
+      role="dialog"
+      aria-modal="true"
+      tabindex="0"
+      class={
+        classes([
+          "z-50 grid w-full max-w-lg gap-4 border bg-background p-6 shadow-lg duration-200 group-data-[state=open]/dialog:animate-in group-data-[state=closed]/dialog:animate-out group-data-[state=closed]/dialog:fade-out-0 group-data-[state=open]/dialog:fade-in-0 group-data-[state=closed]/dialog:zoom-out-95 group-data-[state=open]/dialog:zoom-in-95 group-data-[state=closed]/dialog:slide-out-to-left-1/2 group-data-[state=closed]/dialog:slide-out-to-top-[48%] group-data-[state=open]/dialog:slide-in-from-left-1/2 group-data-[state=open]/dialog:slide-in-from-top-[48%] sm:rounded-lg",
+          @class
+        ])
+      }
+    >
+      <%= render_slot(@inner_block) %>
+      <.link :if={@navigate_on_close} id={"#{@id}_close_anchor"} class="hidden" patch={@navigate_on_close}></.link>
+
+      <button
+        :if={@show_close_button}
+        type="button"
+        class="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none group-data-[state=open]/dialog:bg-accent group-data-[state=open]/dialog:text-muted-foreground"
+        phx-click={JS.exec("phx-hide-modal", to: "##{@id}")}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+          <path d="M18 6 6 18"></path>
+          <path d="m6 6 12 12"></path>
+        </svg>
+        <span class="sr-only">Close</span>
+      </button>
     </div>
     """
   end

@@ -57,9 +57,44 @@ defmodule CadeauCompas.Wishlist do
     end
   end
 
-  def get_detail_with_products(username, slug) do
-    {_, wishlist_dto} = Q.get_detail_by_slug_with_products([username: username, slug: slug], into: Queries.WishlistDTO)
+  def get_detail_with_products(owner_username, slug, user_id) do
+    with {_, [first | _rest] = dtos} <- Q.get_detail_by_slug_with_products([owner_username: owner_username, slug: slug, user_id: user_id], into: %Queries.WishlistDTO{}) do
+      case first do
+        %{user_has_access: true} ->
+          {:ok, WishlistModel.from_dto(dtos)}
 
-    Enum.at(WishlistModel.list_from_dto(wishlist_dto), 0)
+        %{id: id, user_has_access: false, accessibility: "permissioned", secret_question: secret_question} ->
+          {:ask_permission, id, secret_question}
+
+        %{id: id, accessibility: "noone"} ->
+          {:no_access, id}
+      end
+    end
+  end
+
+  def check_off_from_list(wishlist_id, product_id, user_id) do
+    case Q.check_off_from_list(user_id: user_id, product_id: product_id, wishlist_id: wishlist_id) do
+      {:ok, [_first | _rest]} ->
+        {:ok}
+
+      {:ok, []} ->
+        {:error, "Could not check off from list"}
+
+      {:error, err} ->
+        {:error, err}
+    end
+  end
+
+  def answer_secret_question(wishlist_id, secret_answer) do
+    case Q.answer_secret_question(wishlist_id: wishlist_id, user_id: "TODO", secret_answer: secret_answer) do
+      {:ok, [_first | _rest]} ->
+        {:ok}
+
+      {:ok, []} ->
+        {:error, "Wrong answer"}
+
+      {:error, err} ->
+        {:error, err}
+    end
   end
 end

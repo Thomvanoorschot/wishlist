@@ -11,7 +11,9 @@ module.exports = {
     "./js/**/*.js",
     "../lib/cadeau_compas_web.ex",
     "../lib/cadeau_compas_web/**/*.*ex",
+    "../deps/live_toast/lib/**/*.*ex",
   ],
+  safelist: ["!bg-green-100", "!bg-green-200", "!bg-red-100", "!bg-red-200"],
   theme: {
     extend: {
       colors: require("./tailwind.colors.json"),
