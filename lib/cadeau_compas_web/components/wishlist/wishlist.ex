@@ -9,6 +9,7 @@ defmodule CadeauCompasWeb.Components.WishlistComponent do
   attr :delete_products_enabled, :boolean, default: false
   attr :wishlist, WishlistModel, required: true
   attr :editable, :boolean, default: false
+  attr :current_user, :map, required: false, default: nil
 
   def wishlist(assigns) do
     ~H"""
@@ -18,11 +19,11 @@ defmodule CadeauCompasWeb.Components.WishlistComponent do
           <.wishlist_header wishlist={@wishlist} editable={@editable} />
         </.accordion_trigger>
         <.accordion_content>
-          <.wishlist_content wishlist={@wishlist} />
+          <.wishlist_content wishlist={@wishlist} current_user={@current_user} />
         </.accordion_content>
       <% else %>
         <.wishlist_header wishlist={@wishlist} editable={@editable} />
-        <.wishlist_content wishlist={@wishlist} editable={@editable} />
+        <.wishlist_content wishlist={@wishlist} editable={@editable} current_user={@current_user} />
       <% end %>
     </.card>
     """
@@ -92,6 +93,8 @@ defmodule CadeauCompasWeb.Components.WishlistComponent do
 
   attr :wishlist, WishlistModel, required: true
   attr :delete_products_enabled, :boolean, default: false
+  attr :editable, :boolean, default: false
+  attr :current_user, :map, required: false
 
   def wishlist_content(%{editable: false} = assigns) do
     ~H"""
@@ -103,8 +106,12 @@ defmodule CadeauCompasWeb.Components.WishlistComponent do
               <img class="aspect-square h-full w-full" alt={product.name} src="https://placehold.co/80" />
             </span>
             <div class="ml-4 space-y-1">
-              <p class={"text-sm font-medium leading-none #{if product.is_checked_off do "line-through" end }"}><%= product.name %></p>
-              <p class={"text-sm text-muted-foreground #{if product.is_checked_off do "line-through" end }"}>€<%= product.price %></p>
+              <p class={"text-sm font-medium leading-none #{if product.checked_off_by != nil and (assigns[:current_user] == nil or product.checked_off_by != @current_user.id ) do "line-through" end }"}>
+                <%= product.name %>
+              </p>
+              <p class={"text-sm text-muted-foreground #{if product.checked_off_by != nil and  (assigns[:current_user] == nil or product.checked_off_by != @current_user.id ) do "line-through" end }"}>
+                €<%= product.price %>
+              </p>
             </div>
             <.button
               class="ml-auto"
@@ -112,7 +119,7 @@ defmodule CadeauCompasWeb.Components.WishlistComponent do
               phx-value-wishlist_id={@wishlist.id}
               phx-value-product_id={product.id}
               phx-disable-with="Submitting..."
-              disabled={product.is_checked_off}
+              disabled={product.checked_off_by != nil and (assigns[:current_user] == nil or product.checked_off_by != @current_user.id)}
             >
               Check off
             </.button>
@@ -133,8 +140,8 @@ defmodule CadeauCompasWeb.Components.WishlistComponent do
               <img class="aspect-square h-full w-full" alt={product.name} src="https://placehold.co/80" />
             </span>
             <div class="ml-4 space-y-1">
-              <p class="text-sm font-medium leading-none"><%= product.name %></p>
-              <p class="text-sm text-muted-foreground">€<%= product.price %></p>
+              <p class={"text-sm font-medium leading-none #{if product.checked_off_by != nil do "line-through" end }"}><%= product.name %></p>
+              <p class={"text-sm text-muted-foreground #{if product.checked_off_by != nil do "line-through" end }"}>€<%= product.price %></p>
             </div>
             <%= if @delete_products_enabled do %>
               <div phx-click="delete_product_from_list" phx-value-wishlist_id={@wishlist.id} phx-value-product_id={product.id} class="ml-auto">

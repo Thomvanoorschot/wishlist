@@ -1,7 +1,7 @@
 <div :if={assigns[:error] != nil}>
   <%= case @error do %>
     <% :no_access -> %>
-      <.dialog id="no-permission-dialog" show={true} focus_wrap={false} show_close_button={false} }>
+      <.dialog id="no-permission-dialog" show={true} focus_wrap={false} show_close_button={false}>
         <.dialog_header>
           <.dialog_title>It seems like you don't have access to this wishlist</.dialog_title>
           <.dialog_description>
@@ -17,7 +17,7 @@
             The owner of this wishlist has protected it with a question. Answer it to get access to the wishlist.
           </.dialog_description>
         </.dialog_header>
-        <.form class="space-y-6" for={@ask_permission_form} id="ask_permission_form_form" phx-submit="ask_permission" }>
+        <.form class="space-y-6" for={@ask_permission_form} id="ask_permission_form_form" phx-submit="ask_permission">
           <.form_item>
             <.form_control>
               <.form_label class="flex items-center justify-between h-6 pl-1">

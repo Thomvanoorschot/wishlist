@@ -26,7 +26,8 @@ SELECT
   P.id :: text AS product_id,
   P.name AS product_name,
   P.category AS product_category,
-  P.price AS product_price
+  P.price AS product_price,
+  WP.checked_off_by
 FROM
   wishlists W
   LEFT JOIN wishlist_products WP ON WP.wishlist_id = W.id
@@ -103,7 +104,7 @@ SELECT
   P.name AS product_name,
   P.category AS product_category,
   P.price AS product_price,
-  WP.checked_off_by is not null as "is_checked_off",
+  WP.checked_off_by,
   CASE
     WHEN W.accessibility = 'noone' THEN false
     WHEN W.accessibility = 'all' THEN true

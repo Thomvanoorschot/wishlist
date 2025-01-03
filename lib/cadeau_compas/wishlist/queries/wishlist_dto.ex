@@ -15,6 +15,6 @@ defmodule CadeauCompas.Wishlist.Queries.WishlistDTO do
     :accessibility,
     :user_has_access,
     :secret_question,
-    :is_checked_off
+    :checked_off_by
   ]
 end

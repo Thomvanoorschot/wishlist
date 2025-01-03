@@ -24,7 +24,7 @@ defmodule CadeauCompas.Wishlist.Models.WishlistModel do
         name: item.product_name,
         category: item.product_category,
         price: item.product_price,
-        is_checked_off: item.is_checked_off
+        checked_off_by: item.checked_off_by
       }
 
       %{acc | products: [product | acc.products]}
@@ -46,7 +46,7 @@ defmodule CadeauCompas.Wishlist.Models.WishlistModel do
             name: item.product_name,
             category: item.product_category,
             price: item.product_price,
-            is_checked_off: item.is_checked_off
+            checked_off_by: item.checked_off_by
           }
         end)
 
