@@ -37,5 +37,5 @@
   <% end %>
 </div>
 <%= if assigns[:wishlist] != nil do %>
-  <.wishlist wishlist={@wishlist} />
+  <.wishlist wishlist={@wishlist} current_user={@current_user} />
 <% end %>

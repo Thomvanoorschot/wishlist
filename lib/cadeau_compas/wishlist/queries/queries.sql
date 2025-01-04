@@ -140,7 +140,7 @@ ORDER BY
 UPDATE
   wishlist_products
 SET
-  checked_off_by = :user_id
+  checked_off_by = :user_id :: text
 WHERE
   product_id = :product_id :: text :: uuid
   AND wishlist_id IN (

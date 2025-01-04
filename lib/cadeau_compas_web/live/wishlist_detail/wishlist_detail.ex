@@ -12,7 +12,7 @@ defmodule CadeauCompasWeb.Live.WishlistDetail do
       socket
       |> assign(:current_page, :wishlist_detail)
 
-    case Wishlist.get_detail_with_products(owner_username, slug, "TODO") do
+    case Wishlist.get_detail_with_products(owner_username, slug, socket.assigns.current_user.id) do
       {:ok, wishlist} ->
         {:ok,
          socket
@@ -41,21 +41,14 @@ defmodule CadeauCompasWeb.Live.WishlistDetail do
     end
   end
 
-  def handle_event("check_off_from_list", %{"wishlist_id" => wishlist_id, "product_id" => product_id}, socket) do
+  def handle_event("check_off_from_list", %{"product_id" => product_id}, socket) do
     %{current_user: current_user, wishlist: wishlist} = socket.assigns
 
-    # TODO Fix
-    case Wishlist.check_off_from_list(wishlist_id, product_id, "TODO") do
-      {:ok} ->
-        updated_products =
-          Enum.map(wishlist.products, fn
-            %ProductModel{id: ^product_id} = p -> %ProductModel{p | checked_off_by: true}
-            p -> p
-          end)
-
+    case Wishlist.check_off_from_list(wishlist, product_id, current_user.id) do
+      {:ok, updated_wishlist} ->
         {:noreply,
          socket
-         |> assign(:wishlist, %{wishlist | products: updated_products})
+         |> assign(:wishlist, updated_wishlist)
          |> put_toast(:info, "Checked off!")}
 
       {:error, err} ->

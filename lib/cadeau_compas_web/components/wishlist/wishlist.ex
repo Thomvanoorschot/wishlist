@@ -129,16 +129,29 @@ defmodule CadeauCompasWeb.Components.WishlistComponent do
                 €<%= product.price %>
               </p>
             </div>
-            <.button
-              class="ml-auto"
-              phx-click="check_off_from_list"
-              phx-value-wishlist_id={@wishlist.id}
-              phx-value-product_id={product.id}
-              phx-disable-with="Submitting..."
-              disabled={product.checked_off_by != nil and (assigns[:current_user] == nil or product.checked_off_by != @current_user.id)}
-            >
-              Check off
-            </.button>
+            <%= if  product.checked_off_by != nil and (assigns[:current_user] != nil and product.checked_off_by == @current_user.id ) do %>
+              <.button
+                class="w-24 ml-auto"
+                variant="outline"
+                phx-click="undo_check_off_from_list"
+                phx-value-wishlist_id={@wishlist.id}
+                phx-value-product_id={product.id}
+                phx-disable-with="Submitting..."
+                disabled={product.checked_off_by != nil and (assigns[:current_user] == nil or product.checked_off_by != @current_user.id)}
+              >
+                Undo
+              </.button>
+            <% else %>
+              <.button
+                class="w-24 ml-auto"
+                phx-click="check_off_from_list"
+                phx-value-product_id={product.id}
+                phx-disable-with="Submitting..."
+                disabled={product.checked_off_by != nil and (assigns[:current_user] == nil or product.checked_off_by != @current_user.id)}
+              >
+                Check off
+              </.button>
+            <% end %>
           </div>
         <% end %>
       </div>

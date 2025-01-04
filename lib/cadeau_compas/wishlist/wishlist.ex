@@ -74,10 +74,16 @@ defmodule CadeauCompas.Wishlist do
     end
   end
 
-  def check_off_from_list(wishlist_id, product_id, user_id) do
-    case Q.check_off_from_list(user_id: user_id, product_id: product_id, wishlist_id: wishlist_id) do
+  def check_off_from_list(%WishlistModel{id: id} = wishlist, product_id, user_id) do
+    case Q.check_off_from_list(user_id: user_id, product_id: product_id, wishlist_id: id) do
       {:ok, [_first | _rest]} ->
-        {:ok}
+        updated_products =
+          Enum.map(wishlist.products, fn
+            %ProductModel{id: ^product_id} = p -> %ProductModel{p | checked_off_by: user_id}
+            p -> p
+          end)
+
+        {:ok, %WishlistModel{wishlist | products: updated_products}}
 
       {:ok, []} ->
         {:error, "Could not check off from list"}
