@@ -33,8 +33,9 @@ defmodule CadeauCompas.Wishlist do
       {:ok, inserted_product} ->
         updated_products = inserted_product ++ wishlist_products
         products = Product.search(query)
-        updated_total_cost = Enum.reduce(updated_products, Decimal.new(0), &Decimal.add(&2, &1.price))
-        {:ok, %{wishlist | products: updated_products, total_cost: updated_total_cost}, products}
+        {updated_total_cost, updated_initial_total_cost} = calculate_total_cost(updated_products)
+
+        {:ok, %{wishlist | products: updated_products, total_cost: updated_total_cost, initial_total_cost: updated_initial_total_cost}, products}
 
       {:error, _} = error ->
         error
@@ -49,8 +50,9 @@ defmodule CadeauCompas.Wishlist do
     case Q.delete_product_from_list(wishlist_id: wishlist.id, product_id: product_id, user_id: user_id) do
       {:ok, []} ->
         updated_products = Enum.reject(products, &(&1.id == product_id))
-        updated_total_cost = Enum.reduce(updated_products, Decimal.new(0), &Decimal.add(&2, &1.price))
-        {:ok, %{wishlist | products: updated_products, total_cost: updated_total_cost}}
+        {updated_total_cost, updated_initial_total_cost} = calculate_total_cost(updated_products)
+
+        {:ok, %{wishlist | products: updated_products, total_cost: updated_total_cost, initial_total_cost: updated_initial_total_cost}}
 
       {:error, []} ->
         {:error, wishlist}
@@ -96,5 +98,21 @@ defmodule CadeauCompas.Wishlist do
       {:error, err} ->
         {:error, err}
     end
+  end
+
+  defp calculate_total_cost(products) do
+    Enum.reduce(products, {Decimal.new(0), Decimal.new(0)}, fn
+      %ProductModel{checked_off_by: nil, price: price}, {total_cost, initial_total_cost} ->
+        {
+          Decimal.add(total_cost, price),
+          Decimal.add(initial_total_cost, price)
+        }
+
+      %ProductModel{price: price}, {total_cost, initial_total_cost} ->
+        {
+          total_cost,
+          Decimal.add(initial_total_cost, price)
+        }
+    end)
   end
 end

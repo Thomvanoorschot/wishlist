@@ -2,7 +2,7 @@ defmodule CadeauCompasWeb.Components.WishlistComponent do
   alias CadeauCompas.Wishlist.Models.WishlistModel
   use CadeauCompasWeb, :live_component
 
-  import SaladUI.{Button, Card, Accordion, DropdownMenu, Menu, Dialog}
+  import SaladUI.{Button, Card, Accordion, DropdownMenu, Menu, Dialog, Tooltip}
   import CadeauCompasWeb.Components.SearchModal
 
   attr :index, :integer, default: 0
@@ -16,10 +16,10 @@ defmodule CadeauCompasWeb.Components.WishlistComponent do
     <.card class="max-w-4xl mx auto">
       <%= if @editable do %>
         <.accordion_trigger open={@wishlist.products != [] && @index == 0} class="flex flex-row-reverse p-2">
-          <.wishlist_header wishlist={@wishlist} editable={@editable} />
+          <.wishlist_header wishlist={@wishlist} editable={@editable} current_user={@current_user} />
         </.accordion_trigger>
         <.accordion_content>
-          <.wishlist_content wishlist={@wishlist} current_user={@current_user} />
+          <.wishlist_content wishlist={@wishlist} editable={@editable} current_user={@current_user} delete_products_enabled={@delete_products_enabled} />
         </.accordion_content>
       <% else %>
         <.wishlist_header wishlist={@wishlist} editable={@editable} />
@@ -31,6 +31,7 @@ defmodule CadeauCompasWeb.Components.WishlistComponent do
 
   attr :wishlist, WishlistModel, required: true
   attr :editable, :boolean, default: false
+  attr :current_user, :map, required: false, default: nil
 
   def wishlist_header(%{editable: false} = assigns) do
     ~H"""
@@ -49,10 +50,22 @@ defmodule CadeauCompasWeb.Components.WishlistComponent do
         <div>
           <.card_title><%= @wishlist.name %></.card_title>
           <%= if @wishlist.total_cost  do %>
-            <.card_description>€<%= @wishlist.total_cost %></.card_description>
+            <%= if @wishlist.total_cost == @wishlist.initial_total_cost do %>
+              <.card_description>€<%= @wishlist.total_cost %></.card_description>
+            <% else %>
+              <.card_description>€<%= @wishlist.total_cost %> of total €<%= @wishlist.initial_total_cost %></.card_description>
+            <% end %>
           <% end %>
         </div>
         <div class="flex gap-2">
+          <.tooltip>
+            <.button variant="outline" id={"copy-#{@wishlist.id}"} data-to={generatate_detail_page_link(@current_user.username, @wishlist.slug)} phx-hook="Copy">
+              <.icon name="hero-link" class="h-5 w-5" />
+            </.button>
+            <.tooltip_content class="bg-primary text-white">
+              <p>Copy URL to clipboard</p>
+            </.tooltip_content>
+          </.tooltip>
           <.button phx-click={
             JS.set_attribute({"wishlist_id", @wishlist.id}, to: "#selected_wishlist")
             |> open_search_modal()
@@ -66,21 +79,24 @@ defmodule CadeauCompasWeb.Components.WishlistComponent do
               </.button>
             </.dropdown_menu_trigger>
             <.dropdown_menu_content align="end">
-              <.menu class="w-56">
-                <.menu_item phx-click={show_modal("edit-dialog-#{@wishlist.id}")} onclick="event.preventDefault(); ">
+              <.menu class="w-44">
+                <.menu_item class="" phx-click={show_modal("edit-dialog-#{@wishlist.id}")} onclick="event.preventDefault(); ">
                   <.icon name="hero-pencil-square" class="mr-2 h-4 w-4" />
                   <span>Edit</span>
-                  <.menu_shortcut>⌘P</.menu_shortcut>
                 </.menu_item>
                 <.menu_item phx-click={show_modal("delete-dialog-#{@wishlist.id}")} onclick="event.preventDefault(); ">
                   <.icon name="hero-trash" class="mr-2 h-4 w-4" />
                   <span>Delete wishlist</span>
-                  <.menu_shortcut>⌘B</.menu_shortcut>
                 </.menu_item>
                 <.menu_item phx-click="toggle_delete_products" onclick="event.preventDefault(); ">
                   <.icon name="hero-minus-circle" class="mr-2 h-4 w-4" />
                   <span>Delete products</span>
-                  <.menu_shortcut>⌘B</.menu_shortcut>
+                </.menu_item>
+                <.menu_item>
+                  <a href={generatate_detail_page_link(@current_user.username, @wishlist.slug)} target="_blank" rel="noopener noreferrer">
+                    <.icon name="hero-arrow-top-right-on-square" class="mr-2 h-4 w-4" />
+                    <span>Open detail page</span>
+                  </a>
                 </.menu_item>
               </.menu>
             </.dropdown_menu_content>
@@ -153,5 +169,9 @@ defmodule CadeauCompasWeb.Components.WishlistComponent do
       </div>
     </.card_content>
     """
+  end
+
+  defp generatate_detail_page_link(username, slug) do
+    "https://localhost:4001/wishlist/#{username}/#{slug}"
   end
 end

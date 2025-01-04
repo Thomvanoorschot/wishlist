@@ -62,8 +62,7 @@ defmodule CadeauCompas.MixProject do
       {:faker, "~> 0.17", only: [:dev, :test]},
       {:dialyxir, "~> 1.4.5", only: [:dev], runtime: false},
       {:live_toast, "~> 0.6.4"},
-
-      # SaladUI
+      {:ecto_dev_logger, "~> 0.14", only: :dev},
       {:salad_ui, "~> 0.13.0"}
     ]
   end

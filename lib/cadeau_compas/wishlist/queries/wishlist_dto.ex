@@ -7,6 +7,7 @@ defmodule CadeauCompas.Wishlist.Queries.WishlistDTO do
     :name,
     :slug,
     :total_cost,
+    :initial_total_cost,
     :inserted_at,
     :product_id,
     :product_name,

@@ -22,7 +22,13 @@ SELECT
   W.name,
   W.slug,
   W.inserted_at,
-  SUM(P.price) OVER (PARTITION BY W.id) AS total_cost,
+  SUM(P.price) OVER (PARTITION BY W.id) AS initial_total_cost,
+  SUM(
+    CASE
+      WHEN WP.checked_off_by IS NULL THEN P.price
+      ELSE 0
+    END
+  ) OVER (PARTITION BY W.id) AS total_cost,
   P.id :: text AS product_id,
   P.name AS product_name,
   P.category AS product_category,
@@ -99,7 +105,12 @@ SELECT
   W.inserted_at,
   W.accessibility,
   W.secret_question,
-  SUM(P.price) OVER (PARTITION BY W.id) AS total_cost,
+  SUM(
+    CASE
+      WHEN WP.checked_off_by IS NULL THEN P.price
+      ELSE 0
+    END
+  ) OVER (PARTITION BY W.id) AS total_cost,
   P.id :: text AS product_id,
   P.name AS product_name,
   P.category AS product_category,

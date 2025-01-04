@@ -22,12 +22,14 @@ import { Socket } from "phoenix";
 import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
 import { SearchModal } from "./search_modal";
+import { Copy } from "./copy";
 import { SearchModalWishlistId } from "./search_modal_wishlist_id";
 import { createLiveToastHook } from "../../deps/live_toast";
 
 let Hooks = {};
 Hooks.SearchModal = SearchModal;
 Hooks.SearchModalWishlistId = SearchModalWishlistId;
+Hooks.Copy = Copy;
 Hooks.OpenModal = {
   mounted() {
     this.handleEvent("open_modal", (payload) => {
