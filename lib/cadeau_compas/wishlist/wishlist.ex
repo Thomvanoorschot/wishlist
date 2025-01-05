@@ -11,9 +11,11 @@ defmodule CadeauCompas.Wishlist do
   end
 
   def upsert_wishlist(%WishlistModel{id: id, user_id: user_id, name: name} = wishlist) do
-    case Q.upsert_wishlist(id: id, user_id: user_id, name: name, slug: slugify(name)) do
+    slug = slugify(name)
+
+    case Q.upsert_wishlist(id: id, user_id: user_id, name: name, slug: slug) do
       {:ok, [%{id: wishlist_id}]} ->
-        {:ok, %{wishlist | id: wishlist_id}}
+        {:ok, %{wishlist | id: wishlist_id, user_id: user_id, name: name, slug: slug}}
 
       {:error, _} = error ->
         error
@@ -93,8 +95,8 @@ defmodule CadeauCompas.Wishlist do
     end
   end
 
-  def answer_secret_question(wishlist_id, secret_answer) do
-    case Q.answer_secret_question(wishlist_id: wishlist_id, user_id: "TODO", secret_answer: secret_answer) do
+  def answer_secret_question(wishlist_id, secret_answer, user_id) do
+    case Q.answer_secret_question(wishlist_id: wishlist_id, user_id: user_id, secret_answer: secret_answer) do
       {:ok, [_first | _rest]} ->
         {:ok}
 

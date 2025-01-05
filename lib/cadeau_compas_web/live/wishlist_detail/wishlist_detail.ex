@@ -59,10 +59,10 @@ defmodule CadeauCompasWeb.Live.WishlistDetail do
   end
 
   def handle_event("ask_permission", %{"ask_permission_form" => %{"secret_answer" => secret_answer}}, socket) do
-    %{wishlist_id: wishlist_id, owner_username: owner_username, slug: slug} = socket.assigns
+    %{current_user: current_user, wishlist_id: wishlist_id, owner_username: owner_username, slug: slug} = socket.assigns
 
-    with {:ok} <- Wishlist.answer_secret_question(wishlist_id, secret_answer),
-         {:ok, wishlist} <- Wishlist.get_detail_with_products(owner_username, slug, "TODO") do
+    with {:ok} <- Wishlist.answer_secret_question(wishlist_id, secret_answer, current_user.id),
+         {:ok, wishlist} <- Wishlist.get_detail_with_products(owner_username, slug, current_user.id) do
       {:noreply,
        socket
        |> put_toast(:info, "That's right!")

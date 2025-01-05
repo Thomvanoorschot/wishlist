@@ -10,19 +10,20 @@ defmodule CadeauCompasWeb.Components.WishlistComponent do
   attr :wishlist, WishlistModel, required: true
   attr :editable, :boolean, default: false
   attr :current_user, :map, required: false, default: nil
+  attr :domain, :string, required: true
 
   def wishlist(assigns) do
     ~H"""
     <.card class="max-w-4xl mx auto">
       <%= if @editable do %>
         <.accordion_trigger open={@wishlist.products != [] && @index == 0} class="flex flex-row-reverse p-2">
-          <.wishlist_header wishlist={@wishlist} editable={@editable} current_user={@current_user} />
+          <.wishlist_header domain={@domain} wishlist={@wishlist} editable={@editable} current_user={@current_user} />
         </.accordion_trigger>
         <.accordion_content>
           <.wishlist_content wishlist={@wishlist} editable={@editable} current_user={@current_user} delete_products_enabled={@delete_products_enabled} />
         </.accordion_content>
       <% else %>
-        <.wishlist_header wishlist={@wishlist} editable={@editable} />
+        <.wishlist_header domain={@domain} wishlist={@wishlist} editable={@editable} />
         <.wishlist_content wishlist={@wishlist} editable={@editable} current_user={@current_user} />
       <% end %>
     </.card>
@@ -59,7 +60,7 @@ defmodule CadeauCompasWeb.Components.WishlistComponent do
         </div>
         <div class="flex gap-2">
           <.tooltip>
-            <.button variant="outline" id={"copy-#{@wishlist.id}"} data-to={generatate_detail_page_link(@current_user.username, @wishlist.slug)} phx-hook="Copy">
+            <.button variant="outline" id={"copy-#{@wishlist.id}"} data-to={generatate_detail_page_link(@domain, @current_user.username, @wishlist.slug)} phx-hook="Copy">
               <.icon name="hero-link" class="h-5 w-5" />
             </.button>
             <.tooltip_content class="bg-primary text-white">
@@ -93,7 +94,7 @@ defmodule CadeauCompasWeb.Components.WishlistComponent do
                   <span>Delete products</span>
                 </.menu_item>
                 <.menu_item>
-                  <a href={generatate_detail_page_link(@current_user.username, @wishlist.slug)} target="_blank" rel="noopener noreferrer">
+                  <a href={generatate_detail_page_link(@domain, @current_user.username, @wishlist.slug)} target="_blank" rel="noopener noreferrer">
                     <.icon name="hero-arrow-top-right-on-square" class="mr-2 h-4 w-4" />
                     <span>Open detail page</span>
                   </a>
@@ -112,6 +113,16 @@ defmodule CadeauCompasWeb.Components.WishlistComponent do
   attr :editable, :boolean, default: false
   attr :current_user, :map, required: false
 
+  def wishlist_content(%{editable: false, wishlist: %{products: []}} = assigns) do
+    ~H"""
+    <.card_content>
+      <div class="space-y-8">
+        This wishlist seems to be empty
+      </div>
+    </.card_content>
+    """
+  end
+
   def wishlist_content(%{editable: false} = assigns) do
     ~H"""
     <.card_content>
@@ -129,28 +140,30 @@ defmodule CadeauCompasWeb.Components.WishlistComponent do
                 €<%= product.price %>
               </p>
             </div>
-            <%= if  product.checked_off_by != nil and (assigns[:current_user] != nil and product.checked_off_by == @current_user.id ) do %>
-              <.button
-                class="w-24 ml-auto"
-                variant="outline"
-                phx-click="undo_check_off_from_list"
-                phx-value-wishlist_id={@wishlist.id}
-                phx-value-product_id={product.id}
-                phx-disable-with="Submitting..."
-                disabled={product.checked_off_by != nil and (assigns[:current_user] == nil or product.checked_off_by != @current_user.id)}
-              >
-                Undo
-              </.button>
-            <% else %>
-              <.button
-                class="w-24 ml-auto"
-                phx-click="check_off_from_list"
-                phx-value-product_id={product.id}
-                phx-disable-with="Submitting..."
-                disabled={product.checked_off_by != nil and (assigns[:current_user] == nil or product.checked_off_by != @current_user.id)}
-              >
-                Check off
-              </.button>
+            <%= if assigns[:current_user] != nil and @wishlist.user_id != @current_user.id do %>
+              <%= if  product.checked_off_by != nil and (assigns[:current_user] != nil and product.checked_off_by == @current_user.id ) do %>
+                <.button
+                  class="w-24 ml-auto"
+                  variant="outline"
+                  phx-click="undo_check_off_from_list"
+                  phx-value-wishlist_id={@wishlist.id}
+                  phx-value-product_id={product.id}
+                  phx-disable-with="Submitting..."
+                  disabled={product.checked_off_by != nil and (assigns[:current_user] == nil or product.checked_off_by != @current_user.id)}
+                >
+                  Undo
+                </.button>
+              <% else %>
+                <.button
+                  class="w-24 ml-auto"
+                  phx-click="check_off_from_list"
+                  phx-value-product_id={product.id}
+                  phx-disable-with="Submitting..."
+                  disabled={product.checked_off_by != nil and (assigns[:current_user] == nil or product.checked_off_by != @current_user.id)}
+                >
+                  Check off
+                </.button>
+              <% end %>
             <% end %>
           </div>
         <% end %>
@@ -184,7 +197,7 @@ defmodule CadeauCompasWeb.Components.WishlistComponent do
     """
   end
 
-  defp generatate_detail_page_link(username, slug) do
-    "https://localhost:4001/wishlist/#{username}/#{slug}"
+  defp generatate_detail_page_link(domain, username, slug) do
+    "https://#{domain}/wishlist/#{username}/#{slug}"
   end
 end

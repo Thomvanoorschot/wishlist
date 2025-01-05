@@ -43,7 +43,7 @@ defmodule CadeauCompasWeb.Router do
     pipe_through :browser
 
     live_session :maybe_user,
-      on_mount: [{CadeauCompasWeb.UserAuth, :mount_current_user}] do
+      on_mount: [{CadeauCompasWeb.UserAuth, :mount_current_user}, CadeauCompasWeb.SetDomain] do
       live "/", Live.Lander
       live "/wishlist/:username/:wishlist_slug", Live.WishlistDetail
     end
@@ -55,7 +55,7 @@ defmodule CadeauCompasWeb.Router do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
 
     live_session :redirect_if_user_is_authenticated,
-      on_mount: [{CadeauCompasWeb.UserAuth, :redirect_if_user_is_authenticated}] do
+      on_mount: [{CadeauCompasWeb.UserAuth, :redirect_if_user_is_authenticated}, CadeauCompasWeb.SetDomain] do
       live "/users/register", Live.RegisterLogIn, :register
       live "/users/log_in", Live.RegisterLogIn, :log_in
       # live "/users/reset_password", UserForgotPasswordLive, :new
@@ -69,7 +69,7 @@ defmodule CadeauCompasWeb.Router do
     pipe_through [:browser, :require_authenticated_user]
 
     live_session :require_authenticated_user,
-      on_mount: [{CadeauCompasWeb.UserAuth, :ensure_authenticated}] do
+      on_mount: [{CadeauCompasWeb.UserAuth, :ensure_authenticated}, CadeauCompasWeb.SetDomain] do
       live "/wishlist/manage", Live.ManageWishlists
       # live "/users/settings", UserSettingsLive, :edit
       # live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
@@ -82,7 +82,7 @@ defmodule CadeauCompasWeb.Router do
     delete "/users/log_out", UserSessionController, :delete
 
     live_session :current_user,
-      on_mount: [{CadeauCompasWeb.UserAuth, :mount_current_user}] do
+      on_mount: [{CadeauCompasWeb.UserAuth, :mount_current_user}, CadeauCompasWeb.SetDomain] do
       # live "/users/confirm/:token", UserConfirmationLive, :edit
       # live "/users/confirm", UserConfirmationInstructionsLive, :new
     end

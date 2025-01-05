@@ -11,6 +11,8 @@ config :cadeau_compas, CadeauCompas.Repo,
   pool_size: 10,
   log: false
 
+config :cadeau_compas, :domain, "localhost:4001"
+
 config :elixir, :dbg_callback, fn entry -> entry end
 # For development, we disable any cache and enable
 # debugging and code reloading.

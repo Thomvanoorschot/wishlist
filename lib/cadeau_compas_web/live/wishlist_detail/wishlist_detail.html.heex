@@ -1,3 +1,4 @@
+<%= @domain %>
 <div :if={assigns[:error] != nil}>
   <%= case @error do %>
     <% :no_access -> %>
@@ -37,5 +38,5 @@
   <% end %>
 </div>
 <%= if assigns[:wishlist] != nil do %>
-  <.wishlist wishlist={@wishlist} current_user={@current_user} />
+  <.wishlist domain={@domain} wishlist={@wishlist} current_user={@current_user} />
 <% end %>

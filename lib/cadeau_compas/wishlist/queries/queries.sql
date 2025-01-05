@@ -117,6 +117,7 @@ SELECT
   P.price AS product_price,
   WP.checked_off_by,
   CASE
+    WHEN W.user_id = :user_id :: text :: uuid THEN true
     WHEN W.accessibility = 'noone' THEN false
     WHEN W.accessibility = 'all' THEN true
     WHEN W.accessibility = 'permissioned' THEN (WA.user_id IS NOT NULL)

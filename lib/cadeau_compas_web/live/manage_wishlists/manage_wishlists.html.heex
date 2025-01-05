@@ -23,7 +23,7 @@
   </.card_content>
 </.card>
 <%= for {wishlist, index} <- Enum.with_index(@wishlists)  do %>
-  <.wishlist index={index} wishlist={wishlist} delete_products_enabled={@delete_products_enabled} editable={true} current_user={@current_user} />
+  <.wishlist domain={@domain} index={index} wishlist={wishlist} delete_products_enabled={@delete_products_enabled} editable={true} current_user={@current_user} />
   <.dialog id={"delete-dialog-#{wishlist.id}"} on_cancel={hide_modal("delete-dialog-#{wishlist.id}")}>
     <.dialog_header>
       <.dialog_title>Are you absolutely sure?</.dialog_title>

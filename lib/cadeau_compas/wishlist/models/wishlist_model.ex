@@ -20,15 +20,19 @@ defmodule CadeauCompas.Wishlist.Models.WishlistModel do
             products: []
           }
 
-      product = %ProductModel{
-        id: item.product_id,
-        name: item.product_name,
-        category: item.product_category,
-        price: item.product_price,
-        checked_off_by: item.checked_off_by
-      }
+      if item.product_id do
+        product = %ProductModel{
+          id: item.product_id,
+          name: item.product_name,
+          category: item.product_category,
+          price: item.product_price,
+          checked_off_by: item.checked_off_by
+        }
 
-      %{acc | products: [product | acc.products]}
+        %{acc | products: [product | acc.products]}
+      else
+        acc
+      end
     end)
   end
 
