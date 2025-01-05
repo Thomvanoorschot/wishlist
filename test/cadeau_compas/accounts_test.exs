@@ -1,10 +1,10 @@
-defmodule CadeauCompas.AccountsTest do
-  use CadeauCompas.DataCase
+defmodule MyDreamGifts.AccountsTest do
+  use MyDreamGifts.DataCase
 
-  alias CadeauCompas.Accounts
+  alias MyDreamGifts.Accounts
 
-  import CadeauCompas.AccountsFixtures
-  alias CadeauCompas.Accounts.{User, UserToken}
+  import MyDreamGifts.AccountsFixtures
+  alias MyDreamGifts.Accounts.{User, UserToken}
 
   describe "get_user_by_email/1" do
     test "does not return the user if the email does not exist" do

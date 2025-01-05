@@ -1,4 +1,4 @@
-defmodule CadeauCompas.Repo.Migrations.CreateUsersAuthTables do
+defmodule MyDreamGifts.Repo.Migrations.CreateUsersAuthTables do
   use Ecto.Migration
 
   def change do

@@ -9,8 +9,8 @@ module.exports = {
   content: [
     "../deps/salad_ui/lib/**/*.ex",
     "./js/**/*.js",
-    "../lib/cadeau_compas_web.ex",
-    "../lib/cadeau_compas_web/**/*.*ex",
+    "../lib/my_dream_gifts_web.ex",
+    "../lib/my_dream_gifts_web/**/*.*ex",
     "../deps/live_toast/lib/**/*.*ex",
   ],
   safelist: ["!bg-green-100", "!bg-green-200", "!bg-red-100", "!bg-red-200"],

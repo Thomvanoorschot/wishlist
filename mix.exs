@@ -1,9 +1,9 @@
-defmodule CadeauCompas.MixProject do
+defmodule MyDreamGifts.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :cadeau_compas,
+      app: :my_dream_gifts,
       version: "0.1.0",
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -22,7 +22,7 @@ defmodule CadeauCompas.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {CadeauCompas.Application, []},
+      mod: {MyDreamGifts.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end
@@ -80,10 +80,10 @@ defmodule CadeauCompas.MixProject do
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
-      "assets.build": ["tailwind cadeau_compas", "esbuild cadeau_compas"],
+      "assets.build": ["tailwind my_dream_gifts", "esbuild my_dream_gifts"],
       "assets.deploy": [
-        "tailwind cadeau_compas --minify",
-        "esbuild cadeau_compas --minify",
+        "tailwind my_dream_gifts --minify",
+        "esbuild my_dream_gifts --minify",
         "phx.digest"
       ]
     ]

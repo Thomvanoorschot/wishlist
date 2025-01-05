@@ -2,11 +2,11 @@
 export LC_CTYPE=C
 export LANG=C
 
-NEW_NAME="CadeauCompas"
-NEW_OTP="cadeau_compas"
+NEW_NAME="MyDreamGifts"
+NEW_OTP="my_dream_gifts"
 
-CURRENT_NAME="Wishlist"
-CURRENT_OTP="wishlist"
+CURRENT_NAME="CadeauCompas"
+CURRENT_OTP="cadeau_compas"
 
 set -e
 

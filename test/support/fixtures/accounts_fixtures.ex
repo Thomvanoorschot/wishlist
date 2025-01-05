@@ -1,7 +1,7 @@
-defmodule CadeauCompas.AccountsFixtures do
+defmodule MyDreamGifts.AccountsFixtures do
   @moduledoc """
   This module defines test helpers for creating
-  entities via the `CadeauCompas.Accounts` context.
+  entities via the `MyDreamGifts.Accounts` context.
   """
 
   def unique_user_email, do: "user#{System.unique_integer()}@example.com"
@@ -18,7 +18,7 @@ defmodule CadeauCompas.AccountsFixtures do
     {:ok, user} =
       attrs
       |> valid_user_attributes()
-      |> CadeauCompas.Accounts.register_user()
+      |> MyDreamGifts.Accounts.register_user()
 
     user
   end
