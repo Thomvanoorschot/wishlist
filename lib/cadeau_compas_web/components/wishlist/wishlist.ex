@@ -5,7 +5,6 @@ defmodule CadeauCompasWeb.Components.WishlistComponent do
   import SaladUI.{Button, Card, Accordion, DropdownMenu, Menu, Dialog, Tooltip}
   import CadeauCompasWeb.Components.SearchModal
 
-  attr :index, :integer, default: 0
   attr :delete_products_enabled, :boolean, default: false
   attr :wishlist, WishlistModel, required: true
   attr :editable, :boolean, default: false
@@ -16,12 +15,14 @@ defmodule CadeauCompasWeb.Components.WishlistComponent do
     ~H"""
     <.card class="max-w-4xl mx auto">
       <%= if @editable do %>
-        <.accordion_trigger open={@wishlist.products != [] && @index == 0} class="flex flex-row-reverse p-2">
-          <.wishlist_header domain={@domain} wishlist={@wishlist} editable={@editable} current_user={@current_user} />
-        </.accordion_trigger>
-        <.accordion_content>
-          <.wishlist_content wishlist={@wishlist} editable={@editable} current_user={@current_user} delete_products_enabled={@delete_products_enabled} />
-        </.accordion_content>
+        <div id={"wishlist-accordion-#{@wishlist.id}"} phx-hook="Accordion" data-wishlist-id={@wishlist.id} data-default-open={"#{@wishlist.products != []}"} class="max-w-4xl mx-auto">
+          <.accordion_trigger class="flex flex-row-reverse p-2">
+            <.wishlist_header domain={@domain} wishlist={@wishlist} editable={@editable} current_user={@current_user} />
+          </.accordion_trigger>
+          <.accordion_content>
+            <.wishlist_content wishlist={@wishlist} editable={@editable} current_user={@current_user} delete_products_enabled={@delete_products_enabled} />
+          </.accordion_content>
+        </div>
       <% else %>
         <.wishlist_header domain={@domain} wishlist={@wishlist} editable={@editable} />
         <.wishlist_content wishlist={@wishlist} editable={@editable} current_user={@current_user} />
@@ -33,6 +34,7 @@ defmodule CadeauCompasWeb.Components.WishlistComponent do
   attr :wishlist, WishlistModel, required: true
   attr :editable, :boolean, default: false
   attr :current_user, :map, required: false, default: nil
+  attr :domain, :string, required: true
 
   def wishlist_header(%{editable: false} = assigns) do
     ~H"""
@@ -60,22 +62,25 @@ defmodule CadeauCompasWeb.Components.WishlistComponent do
         </div>
         <div class="flex gap-2">
           <.tooltip>
-            <.button variant="outline" id={"copy-#{@wishlist.id}"} data-to={generatate_detail_page_link(@domain, @current_user.username, @wishlist.slug)} phx-hook="Copy">
+            <.button onclick="event.preventDefault();" variant="outline" id={"copy-#{@wishlist.id}"} data-to={generatate_detail_page_link(@domain, @current_user.username, @wishlist.slug)} phx-hook="Copy">
               <.icon name="hero-link" class="h-5 w-5" />
             </.button>
             <.tooltip_content class="bg-primary text-white">
               <p>Copy URL to clipboard</p>
             </.tooltip_content>
           </.tooltip>
-          <.button phx-click={
-            JS.set_attribute({"wishlist_id", @wishlist.id}, to: "#selected_wishlist")
-            |> open_search_modal()
-          }>
+          <.button
+            onclick="event.preventDefault();"
+            phx-click={
+              JS.set_attribute({"wishlist_id", @wishlist.id}, to: "#selected_wishlist")
+              |> open_search_modal()
+            }
+          >
             Add item
           </.button>
           <.dropdown_menu>
             <.dropdown_menu_trigger>
-              <.button variant="outline">
+              <.button onclick="event.preventDefault();" variant="outline">
                 <.icon name="hero-ellipsis-vertical" class="h-4 w-4" />
               </.button>
             </.dropdown_menu_trigger>
