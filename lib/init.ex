@@ -47,7 +47,5 @@ defmodule MyDreamGifts.Init do
         store_id: store_id
       )
     end
-
-    IO.puts("Inserted 1 store and 100 products.")
   end
 end
