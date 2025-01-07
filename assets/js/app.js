@@ -25,13 +25,11 @@ import { SearchModal } from "./search_modal";
 import { Copy } from "./copy";
 import { SearchModalWishlistId } from "./search_modal_wishlist_id";
 import { createLiveToastHook } from "../../deps/live_toast";
-import { Accordion } from "./accordion";
 
 let Hooks = {};
 Hooks.SearchModal = SearchModal;
 Hooks.SearchModalWishlistId = SearchModalWishlistId;
 Hooks.Copy = Copy;
-Hooks.Accordion = Accordion;
 Hooks.OpenModal = {
   mounted() {
     this.handleEvent("open_modal", (payload) => {
