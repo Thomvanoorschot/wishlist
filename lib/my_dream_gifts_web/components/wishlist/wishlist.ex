@@ -15,8 +15,8 @@ defmodule MyDreamGiftsWeb.Components.WishlistComponent do
     ~H"""
     <.card class="max-w-4xl mx auto">
       <%= if @editable do %>
-        <div id={"wishlist-accordion-#{@wishlist.id}"} phx-hook="Accordion" data-wishlist-id={@wishlist.id} data-default-open={"#{@wishlist.products != []}"} class="max-w-4xl mx-auto">
-          <.accordion_trigger class="flex flex-row-reverse p-2">
+        <div id={"wishlist-accordion-#{@wishlist.id}"} } class="max-w-4xl mx-auto">
+          <.accordion_trigger open={true} class="flex flex-row-reverse p-2">
             <.wishlist_header domain={@domain} wishlist={@wishlist} editable={@editable} current_user={@current_user} />
           </.accordion_trigger>
           <.accordion_content>

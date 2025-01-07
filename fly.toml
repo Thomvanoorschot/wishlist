@@ -13,7 +13,7 @@ kill_signal = 'SIGTERM'
   release_command = '/app/bin/migrate'
 
 [env]
-  PHX_HOST = 'my-dream-gifts.fly.dev'
+  PHX_HOST = 'mydream.gifts'
   PORT = '8080'
 
 [http_service]
