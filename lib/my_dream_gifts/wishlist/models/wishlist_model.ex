@@ -1,7 +1,7 @@
 defmodule MyDreamGifts.Wishlist.Models.WishlistModel do
   alias MyDreamGifts.Product.Models.ProductModel
 
-  defstruct [:id, :user_id, :name, :slug, :total_cost, :initial_total_cost, :secret_question, :inserted_at, products: []]
+  defstruct [:id, :user_id, :name, :slug, :total_cost, :initial_total_cost, :accessibility, :secret_question, :secret_answer, :inserted_at, products: []]
 
   def from_dto(dto) do
     dto
@@ -16,7 +16,9 @@ defmodule MyDreamGifts.Wishlist.Models.WishlistModel do
             inserted_at: item.inserted_at,
             initial_total_cost: item.initial_total_cost,
             total_cost: item.total_cost,
+            accessibility: item.accessibility,
             secret_question: item.secret_question,
+            secret_answer: item.secret_answer,
             products: []
           }
 
@@ -63,7 +65,10 @@ defmodule MyDreamGifts.Wishlist.Models.WishlistModel do
         inserted_at: first_item.inserted_at,
         initial_total_cost: first_item.initial_total_cost,
         total_cost: first_item.total_cost,
-        products: products
+        products: products,
+        accessibility: first_item.accessibility,
+        secret_question: first_item.secret_question,
+        secret_answer: first_item.secret_answer
       }
     end)
     |> Enum.sort_by(& &1.inserted_at, {:desc, DateTime})

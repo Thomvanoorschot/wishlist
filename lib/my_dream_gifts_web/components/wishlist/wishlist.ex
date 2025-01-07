@@ -69,6 +69,13 @@ defmodule MyDreamGiftsWeb.Components.WishlistComponent do
               <p>Copy URL to clipboard</p>
             </.tooltip_content>
           </.tooltip>
+          <.button variant="outline" phx-click={show_modal("edit-accessibility-#{@wishlist.id}")} onclick="event.preventDefault();">
+            <%= if @wishlist.accessibility == "all"  do %>
+              <.icon name="hero-lock-open" class="h-5 w-5" />
+            <% else %>
+              <.icon name="hero-lock-closed" class="h-5 w-5" />
+            <% end %>
+          </.button>
           <.button
             onclick="event.preventDefault();"
             phx-click={

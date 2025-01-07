@@ -10,12 +10,38 @@ defmodule MyDreamGifts.Wishlist do
     upsert_wishlist(%WishlistModel{wishlist | id: Ecto.UUID.generate()})
   end
 
-  def upsert_wishlist(%WishlistModel{id: id, user_id: user_id, name: name} = wishlist) do
+  def upsert_wishlist(
+        %WishlistModel{
+          id: id,
+          user_id: user_id,
+          name: name,
+          accessibility: accessibility,
+          secret_question: secret_question,
+          secret_answer: secret_answer
+        } = wishlist
+      ) do
+    new_accessibility = accessibility || "noone"
     slug = slugify(name)
 
-    case Q.upsert_wishlist(id: id, user_id: user_id, name: name, slug: slug) do
+    case Q.upsert_wishlist(
+           id: id,
+           user_id: user_id,
+           name: name,
+           slug: slug,
+           accessibility: new_accessibility,
+           secret_question: secret_question,
+           secret_answer: secret_answer
+         ) do
       {:ok, [%{id: wishlist_id}]} ->
-        {:ok, %{wishlist | id: wishlist_id, user_id: user_id, name: name, slug: slug}}
+        {:ok,
+         %{
+           wishlist
+           | id: wishlist_id,
+             user_id: user_id,
+             name: name,
+             slug: slug,
+             accessibility: new_accessibility
+         }}
 
       {:error, _} = error ->
         error
@@ -82,6 +108,25 @@ defmodule MyDreamGifts.Wishlist do
         updated_products =
           Enum.map(wishlist.products, fn
             %ProductModel{id: ^product_id} = p -> %ProductModel{p | checked_off_by: user_id}
+            p -> p
+          end)
+
+        {:ok, %WishlistModel{wishlist | products: updated_products}}
+
+      {:ok, []} ->
+        {:error, "Could not check off from list"}
+
+      {:error, err} ->
+        {:error, err}
+    end
+  end
+
+  def undo_check_off_from_list(%WishlistModel{id: id} = wishlist, product_id, user_id) do
+    case Q.undo_check_off_from_list(user_id: user_id, product_id: product_id, wishlist_id: id) do
+      {:ok, [_first | _rest]} ->
+        updated_products =
+          Enum.map(wishlist.products, fn
+            %ProductModel{id: ^product_id} = p -> %ProductModel{p | checked_off_by: nil}
             p -> p
           end)
 

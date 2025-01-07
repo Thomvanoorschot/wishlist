@@ -62,7 +62,64 @@
       </div>
 
       <div class="flex justify-end">
-        <.button type="submit">
+        <.button phx-click={hide_modal("edit-dialog-#{wishlist.id}")} type="submit">
+          Save Changes
+        </.button>
+      </div>
+    </.form>
+  </.dialog>
+  <.dialog id={"edit-accessibility-#{wishlist.id}"} on_cancel={hide_modal("edit-accessibility-#{wishlist.id}")}>
+    <.dialog_header>
+      <.dialog_title>Edit permissions</.dialog_title>
+      <.dialog_description>
+        You can configure who has access to your wishlist.
+      </.dialog_description>
+    </.dialog_header>
+
+    <.form
+      :let={f}
+      for={
+        %{
+          "accessibility" => wishlist.accessibility,
+          "secret_question" => wishlist.secret_question,
+          "secret_answer" => wishlist.secret_answer,
+          "wishlist_id" => wishlist.id
+        }
+      }
+      phx-submit="edit_accessibility"
+      phx-change="accessibility_changed"
+      id={"edit-edit_accessibility-form-#{wishlist.id}"}
+      class="flex flex-col gap-4"
+    >
+      <div class="grid grid-cols-4 items-center gap-4">
+        <.label for={f[:accessibility].id}>Accessibility</.label>
+
+        <.select :let={select} field={f[:accessibility]} id="select-accessibility" name="accessibility" target="my-select">
+          <.select_trigger builder={select} class="w-[180px]" />
+          <.select_content class="w-[180px]" builder={select}>
+            <.select_group>
+              <.select_item builder={select} value="noone" label="Noone" />
+              <.select_item builder={select} value="permissioned" label="Permissioned" />
+              <.select_item builder={select} value="all" label="All" />
+            </.select_group>
+          </.select_content>
+        </.select>
+
+        <.input field={f[:wishlist_id]} class="hidden" />
+      </div>
+
+      <%= if wishlist.accessibility == "permissioned" do %>
+        <div class="flex flex-col">
+          <.label for={f[:secret_question].id}>Secret Question</.label>
+          <.input field={f[:secret_question]} placeholder="Enter a secret question" />
+
+          <.label for={f[:secret_answer].id}>Secret Answer</.label>
+          <.input field={f[:secret_answer]} placeholder="Enter your answer" />
+        </div>
+      <% end %>
+
+      <div class="flex justify-end">
+        <.button phx-click={hide_modal("edit-accessibility-#{wishlist.id}")} type="submit">
           Save Changes
         </.button>
       </div>

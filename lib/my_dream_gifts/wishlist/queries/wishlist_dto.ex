@@ -16,6 +16,7 @@ defmodule MyDreamGifts.Wishlist.Queries.WishlistDTO do
     :accessibility,
     :user_has_access,
     :secret_question,
+    :secret_answer,
     :checked_off_by
   ]
 end

@@ -57,6 +57,23 @@ defmodule MyDreamGiftsWeb.Live.WishlistDetail do
     end
   end
 
+  def handle_event("undo_check_off_from_list", %{"product_id" => product_id}, socket) do
+    %{current_user: current_user, wishlist: wishlist} = socket.assigns
+
+    case Wishlist.undo_check_off_from_list(wishlist, product_id, current_user.id) do
+      {:ok, updated_wishlist} ->
+        {:noreply,
+         socket
+         |> assign(:wishlist, updated_wishlist)
+         |> put_toast(:info, "No longer checked off!")}
+
+      {:error, err} ->
+        {:noreply,
+         socket
+         |> put_toast(:error, err)}
+    end
+  end
+
   def handle_event("ask_permission", %{"ask_permission_form" => %{"secret_answer" => secret_answer}}, socket) do
     %{current_user: current_user, wishlist_id: wishlist_id, owner_username: owner_username, slug: slug} = socket.assigns
 

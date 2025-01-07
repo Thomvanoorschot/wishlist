@@ -5,8 +5,9 @@ defmodule MyDreamGiftsWeb.Live.ManageWishlists do
   alias MyDreamGifts.Product
   alias MyDreamGifts.Wishlist
 
+  import LiveToast
   import MyDreamGiftsWeb.Components.{WishlistComponent, SearchModal}
-  import SaladUI.{Button, Card, Input, Form, Dialog}
+  import SaladUI.{Button, Card, Input, Form, Dialog, Select}
 
   def mount(_params, _session, socket) do
     %{id: user_id} = socket.assigns.current_user
@@ -123,9 +124,51 @@ defmodule MyDreamGiftsWeb.Live.ManageWishlists do
     end
   end
 
+  def handle_event(
+        "edit_accessibility",
+        %{"accessibility" => accessibility, "wishlist_id" => wishlist_id} = params,
+        socket
+      ) do
+    secret_question = Map.get(params, "secret_question", nil)
+    secret_answer = Map.get(params, "secret_answer", nil)
+
+    with %WishlistModel{} = wishlist <- Enum.find(socket.assigns.wishlists, &(&1.id == wishlist_id)),
+         {:ok, updated_wishlist} <-
+           Wishlist.upsert_wishlist(%{
+             wishlist
+             | accessibility: accessibility,
+               secret_question: secret_question,
+               secret_answer: secret_answer
+           }) do
+      updated_wishlists =
+        Enum.map(socket.assigns.wishlists, fn
+          %WishlistModel{id: ^wishlist_id} -> updated_wishlist
+          w -> w
+        end)
+
+      {:noreply,
+       socket
+       |> assign(wishlists: updated_wishlists, delete_products_enabled: false)
+       |> put_toast(:info, "Updated permissions!")}
+    else
+      _ ->
+        {:noreply, socket}
+    end
+  end
+
   def handle_event("toggle_delete_products", %{}, socket) do
     socket = assign(socket, delete_products_enabled: !socket.assigns.delete_products_enabled)
 
     {:noreply, socket}
+  end
+
+  def handle_event("accessibility_changed", %{"wishlist_id" => wishlist_id, "accessibility" => new_value} = params, socket) do
+    updated_wishlists =
+      Enum.map(socket.assigns.wishlists, fn
+        %WishlistModel{id: ^wishlist_id} = wishlist -> %WishlistModel{wishlist | accessibility: new_value}
+        wishlist -> wishlist
+      end)
+
+    {:noreply, assign(socket, :wishlists, updated_wishlists)}
   end
 end

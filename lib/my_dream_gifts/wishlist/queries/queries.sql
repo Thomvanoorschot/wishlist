@@ -1,19 +1,36 @@
 -- file: queries.sql
 -- name: upsert_wishlist
 INSERT INTO
-  wishlists (id, user_id, name, slug, inserted_at, updated_at)
+  wishlists (
+    id,
+    user_id,
+    name,
+    slug,
+    accessibility,
+    secret_question,
+    secret_answer,
+    inserted_at,
+    updated_at
+  )
 VALUES
   (
     :id :: text :: uuid,
     :user_id :: text :: uuid,
     :name,
     :slug,
+    :accessibility,
+    :secret_question,
+    :secret_answer,
     now(),
     now()
   ) ON CONFLICT (id) DO
 UPDATE
 SET
-  name = EXCLUDED.name RETURNING id :: text;
+  name = EXCLUDED.name,
+  slug = EXCLUDED.slug,
+  accessibility = EXCLUDED.accessibility,
+  secret_question = EXCLUDED.secret_question,
+  secret_answer = EXCLUDED.secret_answer RETURNING id :: text;
 
 -- name: get_with_products
 SELECT
@@ -22,6 +39,9 @@ SELECT
   W.name,
   W.slug,
   W.inserted_at,
+  W.accessibility,
+  W.secret_question,
+  W.secret_answer,
   SUM(P.price) OVER (PARTITION BY W.id) AS initial_total_cost,
   SUM(
     CASE
@@ -149,7 +169,7 @@ WHERE
       w.id
     FROM
       wishlists AS w
-      INNER JOIN wishlist_access wa ON wa.wishlist_id = w.id
+      LEFT JOIN wishlist_access wa ON wa.wishlist_id = w.id
     WHERE
       w.id = :wishlist_id :: text :: uuid
       AND (
@@ -157,6 +177,16 @@ WHERE
         OR wa.user_id = :user_id
       )
   ) RETURNING wishlist_id :: text;
+
+-- name: undo_check_off_from_list
+UPDATE
+  wishlist_products
+SET
+  checked_off_by = null
+WHERE
+  product_id = :product_id :: text :: uuid
+  AND wishlist_id = :wishlist_id :: text :: uuid
+  AND checked_off_by = :user_id RETURNING wishlist_id :: text;
 
 -- name: answer_secret_question
 INSERT INTO
