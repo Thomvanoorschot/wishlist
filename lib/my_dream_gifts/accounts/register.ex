@@ -68,9 +68,6 @@ defmodule MyDreamGifts.Accounts.Register do
     else
       {:error, reason} ->
         {:error, reason}
-
-      _ ->
-        {:error, :unexpected_error}
     end
   end
 end

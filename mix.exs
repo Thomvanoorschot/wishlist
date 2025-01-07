@@ -59,7 +59,7 @@ defmodule MyDreamGifts.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.5"},
       {:ayesql, "~> 1.1"},
-      {:faker, "~> 0.17", only: [:dev, :test]},
+      {:faker, "~> 0.17"},
       {:dialyxir, "~> 1.4.5", only: [:dev], runtime: false},
       {:live_toast, "~> 0.6.4"},
       {:ecto_dev_logger, "~> 0.14", only: :dev},

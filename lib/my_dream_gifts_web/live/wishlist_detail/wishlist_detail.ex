@@ -1,5 +1,4 @@
 defmodule MyDreamGiftsWeb.Live.WishlistDetail do
-  alias MyDreamGifts.Product.Models.ProductModel
   use MyDreamGiftsWeb, :live_view
 
   import LiveToast

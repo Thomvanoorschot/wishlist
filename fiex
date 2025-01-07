@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -e
+
+fly ssh console --pty --select -C "/app/bin/my_dream_gifts remote"
+
