@@ -24,6 +24,11 @@ kill_signal = 'SIGTERM'
   min_machines_running = 0
   processes = ['app']
 
+  [[http_service.handlers]]
+    handler = "http_redirect"
+    from_host = "www.mydream.gifts"
+    to = "https://mydream.gifts"
+    
   [http_service.concurrency]
     type = 'connections'
     hard_limit = 1000
