@@ -25,6 +25,8 @@ defmodule MyDreamGiftsWeb.Endpoint do
     gzip: false,
     only: MyDreamGiftsWeb.static_paths()
 
+  plug MyDreamGiftsWeb.Plugs.RedirectWWW
+
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
   if code_reloading? do
@@ -49,5 +51,6 @@ defmodule MyDreamGiftsWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
+
   plug MyDreamGiftsWeb.Router
 end

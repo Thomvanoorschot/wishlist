@@ -58,12 +58,12 @@ defmodule MyDreamGifts.Accounts.Register do
              token: token,
              context: context,
              sent_to: sent_to
-           ),
-         {:ok, _} <-
-           UserNotifier.deliver_confirmation_instructions(
-             user,
-             confirmation_url_fun.(encoded_token)
            ) do
+      #  {:ok, _} <-
+      #    UserNotifier.deliver_confirmation_instructions(
+      #      user,
+      #      confirmation_url_fun.(encoded_token)
+      #    ) do
       {:ok, :delivered}
     else
       {:error, reason} ->
